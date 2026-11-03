@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#f5f5f7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Tote Handles -->
+  <path d="M44 42 C44 20, 76 20, 76 42" stroke="#f5f5f7" stroke-width="2.5" fill="none"/>
+  <!-- Bag Body -->
+  <path d="M34 42 L86 42 L82 100 L38 100 Z" fill="#1d1d1f"/>
+  <!-- Doodle Smiley Face -->
+  <circle cx="52" cy="68" r="2.5" fill="#f5f5f7" stroke="none"/>
+  <circle cx="68" cy="68" r="2.5" fill="#f5f5f7" stroke="none"/>
+  <path d="M52 78 Q60 86 68 78" stroke="#f5f5f7" stroke-width="2.5" fill="none"/>
+</svg>
+
