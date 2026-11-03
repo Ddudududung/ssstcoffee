@@ -18,24 +18,36 @@
 
     <style>
         /*
-        ┌─────────────────────────────────────────────────────────────┐
-        │  SSST CUSTOM FONTS — drop files ke:                         │
-        │  public/fonts/                                              │
-        │                                                             │
-        │  Baligo:        Baligo.otf / Baligo.ttf / Baligo.woff2      │
-        │  Kopi Susu:     KopiSusu.otf / KopiSusu.ttf / KopiSusu.woff2│
-        │  CreatoDisplay: CreatoDisplay-*.otf / *.ttf / *.woff2       │
-        └─────────────────────────────────────────────────────────────┘
+        ┌──────────────────────────────────────────────────────────────┐
+        │  SSST CUSTOM FONTS — file asli di subfolder public/fonts/,   │
+        │  salinan datar dengan nama bersih dipakai di bawah ini:      │
+        │                                                              │
+        │  Baligo (display):  Baligo-Light/Regular/Bold.otf            │
+        │  Kopi Susu (akses): KopiSusu.otf                             │
+        │  Creato Display:    CreatoDisplay-Regular/Medium/Bold/       │
+        │                     ExtraBold.otf                            │
+        └──────────────────────────────────────────────────────────────┘
         */
 
         /* SSST Display — Baligo (headline & wordmark) */
         @font-face {
             font-family: 'SSSTeam Baligo';
-            src: url('/fonts/Baligo.woff2') format('woff2'),
-                 url('/fonts/Baligo.woff') format('woff'),
-                 url('/fonts/Baligo.otf') format('opentype'),
-                 url('/fonts/Baligo.ttf') format('truetype');
-            font-weight: normal;
+            src: url('/fonts/Baligo-Light.otf') format('opentype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'SSSTeam Baligo';
+            src: url('/fonts/Baligo-Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'SSSTeam Baligo';
+            src: url('/fonts/Baligo-Bold.otf') format('opentype');
+            font-weight: 700 800;
             font-style: normal;
             font-display: swap;
         }
@@ -43,10 +55,7 @@
         /* SSST Display — Kopi Susu (aksen doodle & handwritten) */
         @font-face {
             font-family: 'SSST Kopi Susu';
-            src: url('/fonts/KopiSusu.woff2') format('woff2'),
-                 url('/fonts/KopiSusu.woff') format('woff'),
-                 url('/fonts/KopiSusu.otf') format('opentype'),
-                 url('/fonts/KopiSusu.ttf') format('truetype');
+            src: url('/fonts/KopiSusu.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -55,36 +64,28 @@
         /* SSST Sans-Serif — Creato Display */
         @font-face {
             font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-Regular.woff2') format('woff2'),
-                 url('/fonts/CreatoDisplay-Regular.otf') format('opentype'),
-                 url('/fonts/CreatoDisplay-Regular.ttf') format('truetype');
+            src: url('/fonts/CreatoDisplay-Regular.otf') format('opentype');
             font-weight: 400;
             font-style: normal;
             font-display: swap;
         }
         @font-face {
             font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-Medium.woff2') format('woff2'),
-                 url('/fonts/CreatoDisplay-Medium.otf') format('opentype'),
-                 url('/fonts/CreatoDisplay-Medium.ttf') format('truetype');
+            src: url('/fonts/CreatoDisplay-Medium.otf') format('opentype');
             font-weight: 500;
             font-style: normal;
             font-display: swap;
         }
         @font-face {
             font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-Bold.woff2') format('woff2'),
-                 url('/fonts/CreatoDisplay-Bold.otf') format('opentype'),
-                 url('/fonts/CreatoDisplay-Bold.ttf') format('truetype');
+            src: url('/fonts/CreatoDisplay-Bold.otf') format('opentype');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
         }
         @font-face {
             font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-ExtraBold.woff2') format('woff2'),
-                 url('/fonts/CreatoDisplay-ExtraBold.otf') format('opentype'),
-                 url('/fonts/CreatoDisplay-ExtraBold.ttf') format('truetype');
+            src: url('/fonts/CreatoDisplay-ExtraBold.otf') format('opentype');
             font-weight: 800;
             font-style: normal;
             font-display: swap;
@@ -94,8 +95,11 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
+            /* Baligo hanya untuk logo & kata kunci (brand book) */
             --font-display:  'SSSTeam Baligo', 'Plus Jakarta Sans', system-ui, sans-serif;
             --font-accent:   'SSST Kopi Susu', 'Caveat', 'Kalam', cursive;
+            /* Judul & isi = Creato Display (brand book: ExtraBold/Bold utk judul) */
+            --font-heading:  'Creato Display', 'Plus Jakarta Sans', system-ui, sans-serif;
             --font-body:     'Creato Display', 'Plus Jakarta Sans', system-ui, sans-serif;
 
             --black:   #111110;
@@ -121,15 +125,16 @@
         }
 
         /* Utility font classes */
-        .f-display  { font-family: var(--font-display); }
-        .f-accent   { font-family: var(--font-accent); }
+        .f-display  { font-family: var(--font-display); }  /* Baligo — logo & kata kunci saja */
+        .f-accent   { font-family: var(--font-accent); }   /* Kopi Susu — aksen tulisan tangan */
+        .f-heading  { font-family: var(--font-heading); font-weight: 800; }
         .f-body     { font-family: var(--font-body); }
 
-        /* Type scale */
-        .t-hero     { font-size: clamp(3.5rem, 8vw, 8rem); line-height: 0.95; letter-spacing: -0.03em; }
-        .t-h1       { font-size: clamp(2.5rem, 5vw, 5rem);  line-height: 1.0;  letter-spacing: -0.02em; }
-        .t-h2       { font-size: clamp(1.75rem, 3vw, 3rem); line-height: 1.1;  letter-spacing: -0.02em; }
-        .t-h3       { font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1.2; }
+        /* Type scale — judul selalu Creato Display (brand book) */
+        .t-hero     { font-family: var(--font-heading); font-weight: 800; font-size: clamp(3.5rem, 8vw, 8rem); line-height: 0.95; letter-spacing: -0.03em; }
+        .t-h1       { font-family: var(--font-heading); font-weight: 800; font-size: clamp(2.5rem, 5vw, 5rem);  line-height: 1.0;  letter-spacing: -0.02em; }
+        .t-h2       { font-family: var(--font-heading); font-weight: 800; font-size: clamp(1.75rem, 3vw, 3rem); line-height: 1.1;  letter-spacing: -0.02em; }
+        .t-h3       { font-family: var(--font-heading); font-weight: 700; font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1.2; }
         .t-body     { font-size: clamp(0.9rem, 1.1vw, 1.05rem); line-height: 1.7; }
         .t-small    { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
         .t-label    { font-size: 0.7rem;  letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; }
@@ -205,6 +210,17 @@
         }
         .nav-links a:hover { color: var(--white); }
 
+        /* ── NAV RESPONSIVE (360px+, brand book) ── */
+        .nav-tagline { color: var(--mid); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-body); }
+        @media (max-width: 900px) {
+            .nav-inner { gap: 1rem; padding: 0 1rem; height: 60px; }
+            .nav-links { gap: 1.1rem; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
+            .nav-links::-webkit-scrollbar { display: none; }
+            .nav-links a { font-size: 0.7rem; letter-spacing: 0.08em; white-space: nowrap; }
+            .nav-tagline { display: none; }
+            #hero { padding-top: 60px; }
+        }
+
         /* ── SECTION WRAPPER ── */
         .section-wrap {
             max-width: 1320px;
@@ -256,6 +272,18 @@
         }
         .tab-btn:hover { color: var(--white); border-color: var(--mid); }
         .tab-btn.active { background: var(--white); color: var(--black); border-color: var(--white); }
+
+        /* ── MENU TABLE — swipe horizontal di layar kecil ── */
+        .menu-scroll { overflow-x: auto; }
+        .menu-row { min-width: 480px; }
+
+        /* ── GRID 2 KOLOM — collapse di mobile ── */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; padding-bottom: 3.5rem; border-bottom: 1px solid var(--border); }
+        @media (max-width: 900px) {
+            .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
+            .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+        }
 
         /* ── OUTLET CARD ── */
         .outlet-card { position: relative; overflow: hidden; cursor: pointer; }
@@ -372,7 +400,7 @@
         </ul>
 
         {{-- Tagline pill --}}
-        <span style="font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--mid); font-family:var(--font-body);">#AlwaySSST</span>
+        <span class="nav-tagline">#AlwaySSST</span>
 
     </div>
 </nav>
@@ -387,9 +415,9 @@
         {{-- Eyebrow --}}
         <p class="t-label c-mid" style="margin-bottom: 1.25rem;">Coffee Companion / Lifestyle Compliment</p>
 
-        {{-- Hero headline --}}
-        <h1 class="f-display t-hero c-white" style="margin-bottom: 1.5rem; max-width: 14ch;">
-            Start<br>with SSST.
+        {{-- Hero headline — judul Creato, "SSST." sebagai kata kunci pakai Baligo (brand book) --}}
+        <h1 class="t-hero c-white" style="margin-bottom: 1.5rem; max-width: 14ch;">
+            Start<br>with <span class="f-display">SSST.</span>
         </h1>
 
         <p class="t-body c-light" style="max-width: 46ch; margin-bottom: 3rem;">
@@ -598,10 +626,10 @@
 
         {{-- Menu Grid by Category --}}
         @foreach($categories as $cat)
-        <div x-show="activeTab === '{{ $cat->slug }}'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+        <div class="menu-scroll" x-show="activeTab === '{{ $cat->slug }}'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
 
             {{-- Column headers --}}
-            <div style="display: grid; grid-template-columns: 1fr 60px 60px 70px 70px; gap: 0 1rem; padding: 0 1rem 0.75rem; margin-bottom: 0; border-bottom: 1px solid var(--border);">
+            <div class="menu-row" style="display: grid; grid-template-columns: 1fr 60px 60px 70px 70px; gap: 0 1rem; padding: 0 1rem 0.75rem; margin-bottom: 0; border-bottom: 1px solid var(--border);">
                 <span class="t-label c-mid">Item</span>
                 <span class="t-label c-mid" style="text-align:center;">Ice</span>
                 <span class="t-label c-mid" style="text-align:center;">Hot</span>
@@ -610,7 +638,7 @@
             </div>
 
             @forelse($cat->menuItems as $item)
-            <div style="display: grid; grid-template-columns: 1fr 60px 60px 70px 70px; gap: 0 1rem; padding: 1.25rem 1rem; border-bottom: 1px solid var(--border); align-items: center; transition: background 0.2s;" onmouseover="this.style.background='var(--card)'" onmouseout="this.style.background='transparent'">
+            <div class="menu-row" style="display: grid; grid-template-columns: 1fr 60px 60px 70px 70px; gap: 0 1rem; padding: 1.25rem 1rem; border-bottom: 1px solid var(--border); align-items: center; transition: background 0.2s;" onmouseover="this.style.background='var(--card)'" onmouseout="this.style.background='transparent'">
 
                 {{-- Item + photo placeholder --}}
                 <div style="display: flex; align-items: center; gap: 1rem;">
@@ -654,7 +682,7 @@
                 @foreach($bottlesAndCans as $b)
                 <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 160px;">
                     <p class="t-label c-mid" style="margin-bottom: 0.5rem;">{{ $b['sub'] }}</p>
-                    <h4 class="f-display c-white" style="font-size: 1.4rem; letter-spacing: -0.02em;">{{ $b['name'] }}</h4>
+                    <h4 class="f-heading c-white" style="font-size: 1.4rem; letter-spacing: -0.02em;">{{ $b['name'] }}</h4>
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1.25rem;">
                         <span style="font-family:var(--font-body); font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding: 0.35rem 0.85rem; border-radius: 100px; border: 1px solid var(--border); color: var(--light);">{{ $b['size'] }}</span>
                         <span class="c-mid" style="font-size:0.85rem; font-weight:600;">Rp {{ $b['price'] }}.000</span>
@@ -781,7 +809,7 @@
 <section id="cerita" style="padding: 6rem 0; background: var(--dark); border-bottom: 1px solid var(--border);">
     <div class="section-wrap">
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;">
+        <div class="grid-2">
 
             {{-- Left: Story --}}
             <div>
@@ -809,7 +837,7 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0;">
                         @foreach([['Source','Starts from the right source'],['Strategy','Developed with a strategy'],['Service','Delivered with great service'],['Team','Crafted by our passionate team']] as $pillar)
                         <div style="padding: 1.5rem 1.25rem 1.5rem 0; border-bottom: 1px solid var(--border); {{ $loop->index % 2 === 1 ? 'padding-left:1.25rem; border-left: 1px solid var(--border);' : '' }}">
-                            <h4 class="f-display c-white" style="font-size:1.3rem; margin-bottom:0.35rem;">{{ $pillar[0] }}</h4>
+                            <h4 class="f-heading c-white" style="font-size:1.3rem; margin-bottom:0.35rem;">{{ $pillar[0] }}</h4>
                             <p class="c-mid" style="font-size:0.78rem; line-height:1.5;">{{ $pillar[1] }}</p>
                         </div>
                         @endforeach
@@ -864,7 +892,7 @@
         </div>
 
         {{-- Outlet Grid --}}
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 1rem;">
             @foreach($outlets as $outlet)
             <div class="outlet-card" style="border-radius: 20px; overflow: hidden; min-height: 380px;">
 
@@ -886,7 +914,7 @@
                 <div class="outlet-overlay" style="position:absolute; bottom:0; left:0; right:0;">
                     {{-- Always visible --}}
                     <p class="t-label c-mid" style="margin-bottom:0.4rem;">{{ strtoupper($outlet->city) }}</p>
-                    <h3 class="f-display c-white" style="font-size:1.6rem; letter-spacing:-0.02em;">{{ $outlet->name }}</h3>
+                    <h3 class="f-heading c-white" style="font-size:1.6rem; letter-spacing:-0.02em;">{{ $outlet->name }}</h3>
 
                     {{-- Hover reveals (detail) --}}
                     <div class="outlet-detail">
@@ -940,7 +968,7 @@
     <div class="section-wrap">
 
         {{-- Top row: Brand + Social + Nav --}}
-        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; padding-bottom: 3.5rem; border-bottom: 1px solid var(--border);">
+        <div class="footer-grid">
 
             {{-- Brand --}}
             <div>
@@ -977,7 +1005,7 @@
                 <div style="display:flex; flex-direction:column; gap:1rem;">
                     <div>
                         <p class="t-label c-mid" style="margin-bottom:0.3rem;">Jam Buka</p>
-                        <p class="f-display c-white" style="font-size:1.1rem;">07.00 — 21.00</p>
+                        <p class="f-heading c-white" style="font-size:1.1rem;">07.00 — 21.00</p>
                         <p class="c-mid" style="font-size:0.78rem;">Setiap Hari</p>
                     </div>
                     <div>
