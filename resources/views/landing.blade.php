@@ -514,7 +514,7 @@
 
         {{-- Logo — ganti file di public/images/logo.png --}}
         <a href="#" class="nav-logo" aria-label="SSST Coffee — ke atas">
-            <img src="/images/logo.png" alt="SSST Coffee" style="height: 38px; width: auto; display: block;">
+            <img src="{{ asset('images/logo.png') }}" alt="SSST Coffee" style="height: 38px; width: auto; display: block;">
         </a>
 
         {{-- Links --}}
@@ -1102,7 +1102,7 @@
             {{-- Brand --}}
             <div>
                 <a href="#" class="nav-logo" style="display:block; margin-bottom:1rem;" aria-label="SSST Coffee">
-                    <img src="/images/logo.png" alt="SSST Coffee" style="height: 48px; width: auto; display: block;">
+                    <img src="{{ asset('images/logo.png') }}" alt="SSST Coffee" style="height: 48px; width: auto; display: block;">
                 </a>
                 <p class="t-body c-mid" style="max-width:38ch; margin-bottom:1.75rem;">
                     Coffee Companion / Lifestyle Compliment.<br>
