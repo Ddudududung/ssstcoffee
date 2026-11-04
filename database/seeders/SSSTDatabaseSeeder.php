@@ -397,6 +397,15 @@ class SSSTDatabaseSeeder extends Seeder
                 'maps_url' => 'https://maps.google.com/?q=Bandung+Margahayu',
                 'sort_order' => 3,
             ],
+            [
+                'name' => 'Pajajaran',
+                'address' => 'Jl. Pajajaran No.37A, Pasir Kaliki, Kec. Cicendo, Kota Bandung, Jawa Barat 40171',
+                'city' => 'Bandung',
+                'opening_hours' => '07.00 - 21.00',
+                'phone' => '(62) 8715 6178 190',
+                'maps_url' => 'https://maps.google.com/?q=Jl.+Pajajaran+No.37A+Pasir+Kaliki+Cicendo+Bandung',
+                'sort_order' => 4,
+            ],
         ];
 
         foreach ($outlets as $outlet) {

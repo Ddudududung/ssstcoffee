@@ -259,12 +259,22 @@
             cursor: pointer;
             transition: filter 0.35s ease, opacity 0.35s ease;
         }
-        .illo:hover {
+        .illo:hover, .illo:focus-visible {
             filter: drop-shadow(0 0 6px rgba(244,244,240,0.55))
                     drop-shadow(0 0 24px rgba(244,244,240,0.22));
         }
         /* Saat satu bagian di-hover, bagian lain meredup → fokus */
         #illo-stage svg:has(.illo:hover) .illo:not(:hover) { opacity: 0.35; }
+
+        /* Chip label — muncul di atas bagian yang di-hover (ala Tuku) */
+        .illo-label {
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+        .illo:hover .illo-label,
+        .illo:focus-visible .illo-label { opacity: 1; transform: translateY(0); }
 
         /* Cursor spotlight — cahaya lembut mengikuti kursor */
         .spotlight {
@@ -332,9 +342,23 @@
         .tab-btn:hover { color: var(--white); border-color: var(--mid); }
         .tab-btn.active { background: var(--white); color: var(--black); border-color: var(--white); }
 
-        /* ── MENU TABLE — swipe horizontal di layar kecil ── */
-        .menu-scroll { overflow-x: auto; }
-        .menu-row { min-width: 480px; }
+        /* ── MENU ITEM BUTTON — klik → foto & keterangan di panel kiri ── */
+        .menu-item-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            padding: 0.9rem 1.1rem;
+            cursor: pointer;
+            font-family: var(--font-body);
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .menu-item-btn:hover { background: rgba(29,29,31,0.05); }
+        .menu-item-btn.active { background: var(--card); border-color: var(--border); }
+        .mi-name { display: block; font-weight: 700; font-size: 0.95rem; color: var(--white); }
+        .mi-desc { display: block; font-size: 0.78rem; color: var(--mid); margin-top: 0.25rem; line-height: 1.5; }
 
         /* ── SECTION THEMES — ritme gelap/terang/abu (palet netral SSST) ──
            Semua warna inline pakai var(), jadi cukup remap variabel di sini
@@ -459,9 +483,6 @@
     </style>
 </head>
 <body x-data="{
-    activeHotspot: 2,
-    activeTab: 'coffee',
-    hotspots: {{ Js::from($hotspots) }},
     navScrolled: false,
     init() {
         window.addEventListener('scroll', () => {
@@ -491,8 +512,10 @@
 <nav id="site-nav" class="glass">
     <div class="nav-inner">
 
-        {{-- Logo --}}
-        <a href="#" class="nav-logo">ssst</a>
+        {{-- Logo — ganti file di public/images/logo.png --}}
+        <a href="#" class="nav-logo" aria-label="SSST Coffee — ke atas">
+            <img src="/images/logo.png" alt="SSST Coffee" style="height: 38px; width: auto; display: block;">
+        </a>
 
         {{-- Links --}}
         <ul class="nav-links">
@@ -527,7 +550,7 @@
 
         <p class="t-body c-light" style="max-width: 46ch; margin-bottom: 3rem;">
             Titik singgah buat ngopi. Setelah makan, setelah lari, atau sebelum pulang.<br>
-            Arahkan kursor ke gambar — tiap bagiannya menyala dan punya cerita.
+            Arahkan kursor ke gambar — klik bagian yang menyala untuk lompat ke section-nya.
         </p>
 
         {{-- ── HOTSPOT STAGE ── --}}
@@ -542,8 +565,11 @@
                         {{-- Ground --}}
                         <line x1="30" y1="360" x2="970" y2="360" stroke="#2e2e2c" stroke-width="2"/>
 
-                        {{-- ░░ KEDAI SSST (Left) — interaktif: hover → hotspot 0 ░░ --}}
-                        <g class="illo" data-spot="0" @mouseenter="activeHotspot = 0" @click="activeHotspot = 0; scrollTo(hotspots[0]?.target_section)">
+                        {{-- ░░ KEDAI SSST (Left) — hover: chip label, klik: lompat ke section ░░ --}}
+                        <g class="illo" data-spot="0" tabindex="0" role="button"
+                           aria-label="{{ optional($hotspots->get(0))->title ?? 'Kedai SSST Coffee' }}"
+                           @click="scrollTo('{{ optional($hotspots->get(0))->target_section ?? '#outlet' }}')"
+                           @keydown.enter="scrollTo('{{ optional($hotspots->get(0))->target_section ?? '#outlet' }}')">
                         {{-- Roof/canopy --}}
                         <polygon points="40,170 240,170 225,138 55,138" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
                         <line x1="82" y1="138" x2="68" y2="170" stroke="#f4f4f0" stroke-width="1.5"/>
@@ -563,19 +589,34 @@
                         {{-- Door --}}
                         <rect x="160" y="200" width="50" height="155" fill="#212120" stroke="#f4f4f0" stroke-width="2"/>
                         <circle cx="170" cy="277" r="3" fill="#f4f4f0"/>
+                        {{-- Chip label muncul saat hover --}}
+                        <g class="illo-label">
+                            <rect x="52" y="42" width="180" height="30" rx="15" fill="#f4f4f0"/>
+                            <text x="142" y="62" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(0))->title ?? 'Kedai SSST Coffee' }} →</text>
+                        </g>
                         </g>
 
-                        {{-- ░░ TOTEBAG (2nd left) — interaktif: hover → hotspot 1 ░░ --}}
-                        <g class="illo" data-spot="1" @mouseenter="activeHotspot = 1" @click="activeHotspot = 1; scrollTo(hotspots[1]?.target_section)">
+                        {{-- ░░ TOTEBAG (2nd left) — hover: chip label, klik: lompat ke section ░░ --}}
+                        <g class="illo" data-spot="1" tabindex="0" role="button"
+                           aria-label="{{ optional($hotspots->get(1))->title ?? 'Bawa Pulang Merch' }}"
+                           @click="scrollTo('{{ optional($hotspots->get(1))->target_section ?? '#merch' }}')"
+                           @keydown.enter="scrollTo('{{ optional($hotspots->get(1))->target_section ?? '#merch' }}')">
                         <path d="M292,256 C292,232 328,232 328,256" stroke="#f4f4f0" stroke-width="2.5" fill="none"/>
                         <path d="M282,256 L338,256 L332,348 L288,348 Z" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
                         <circle cx="300" cy="292" r="2.5" fill="#f4f4f0"/>
                         <circle cx="320" cy="292" r="2.5" fill="#f4f4f0"/>
                         <path d="M302,305 Q310,313 318,305" stroke="#f4f4f0" stroke-width="2" fill="none"/>
+                        <g class="illo-label">
+                            <rect x="220" y="188" width="180" height="30" rx="15" fill="#f4f4f0"/>
+                            <text x="310" y="208" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(1))->title ?? 'Bawa Pulang Merch' }} →</text>
+                        </g>
                         </g>
 
-                        {{-- ░░ CUP (Centre) — interaktif: hover → hotspot 2, uap beranimasi ░░ --}}
-                        <g class="illo" data-spot="2" @mouseenter="activeHotspot = 2" @click="activeHotspot = 2; scrollTo(hotspots[2]?.target_section)">
+                        {{-- ░░ CUP (Centre) — hover: chip label, klik: lompat ke section, uap beranimasi ░░ --}}
+                        <g class="illo" data-spot="2" tabindex="0" role="button"
+                           aria-label="{{ optional($hotspots->get(2))->title ?? 'Menu kopi' }}"
+                           @click="scrollTo('{{ optional($hotspots->get(2))->target_section ?? '#menu' }}')"
+                           @keydown.enter="scrollTo('{{ optional($hotspots->get(2))->target_section ?? '#menu' }}')">
                         <rect x="378" y="172" width="84" height="13" rx="4" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
                         <path d="M388,185 L450,185 L443,355 L395,355 Z" fill="#2a2a28" stroke="#f4f4f0" stroke-width="2.5"/>
                         <text x="419" y="278" fill="#f4f4f0" font-family="'Creato Display',sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="-0.5">ssst</text>
@@ -585,10 +626,17 @@
                             <path d="M419,153 Q423,143 419,133"/>
                             <path d="M438,157 Q442,147 438,137"/>
                         </g>
+                        <g class="illo-label">
+                            <rect x="330" y="64" width="180" height="30" rx="15" fill="#f4f4f0"/>
+                            <text x="420" y="84" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(2))->title ?? 'Menu kopi' }} →</text>
+                        </g>
                         </g>
 
-                        {{-- ░░ RUNNER (Centre-right) — interaktif: hover → hotspot 3, angin beranimasi ░░ --}}
-                        <g class="illo" data-spot="3" @mouseenter="activeHotspot = 3" @click="activeHotspot = 3; scrollTo(hotspots[3]?.target_section)">
+                        {{-- ░░ RUNNER (Centre-right) — hover: chip label, klik: lompat ke section, angin beranimasi ░░ --}}
+                        <g class="illo" data-spot="3" tabindex="0" role="button"
+                           aria-label="{{ optional($hotspots->get(3))->title ?? 'Post Run Pitstop' }}"
+                           @click="scrollTo('{{ optional($hotspots->get(3))->target_section ?? '#cerita' }}')"
+                           @keydown.enter="scrollTo('{{ optional($hotspots->get(3))->target_section ?? '#cerita' }}')">
                         <circle cx="547" cy="182" r="14" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
                         <line x1="537" y1="178" x2="557" y2="178" stroke="#f4f4f0" stroke-width="2"/>
                         <circle cx="543" cy="183" r="1.5" fill="#f4f4f0"/>
@@ -606,10 +654,17 @@
                             <line x1="481" y1="241" x2="506" y2="241"/>
                             <line x1="476" y1="255" x2="502" y2="255"/>
                         </g>
+                        <g class="illo-label">
+                            <rect x="460" y="64" width="180" height="30" rx="15" fill="#f4f4f0"/>
+                            <text x="550" y="84" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(3))->title ?? 'Post Run Pitstop' }} →</text>
+                        </g>
                         </g>
 
-                        {{-- ░░ TWO PEOPLE AT TABLE — interaktif: hover → hotspot 4 ░░ --}}
-                        <g class="illo" data-spot="4" @mouseenter="activeHotspot = 4" @click="activeHotspot = 4; scrollTo(hotspots[4]?.target_section)">
+                        {{-- ░░ TWO PEOPLE AT TABLE — hover: chip label, klik: lompat ke section ░░ --}}
+                        <g class="illo" data-spot="4" tabindex="0" role="button"
+                           aria-label="{{ optional($hotspots->get(4))->title ?? 'Lanjut Ngobrol' }}"
+                           @click="scrollTo('{{ optional($hotspots->get(4))->target_section ?? '#cerita' }}')"
+                           @keydown.enter="scrollTo('{{ optional($hotspots->get(4))->target_section ?? '#cerita' }}')">
                         <circle cx="700" cy="210" r="14" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
                         <circle cx="696" cy="210" r="1.5" fill="#f4f4f0"/>
                         <circle cx="704" cy="210" r="1.5" fill="#f4f4f0"/>
@@ -623,10 +678,17 @@
                         <line x1="732" y1="272" x2="732" y2="355" stroke="#f4f4f0" stroke-width="3.5"/>
                         <rect x="713" y="257" width="11" height="14" rx="2" fill="#f4f4f0"/>
                         <rect x="742" y="257" width="11" height="14" rx="2" fill="#f4f4f0"/>
+                        <g class="illo-label">
+                            <rect x="660" y="64" width="180" height="30" rx="15" fill="#f4f4f0"/>
+                            <text x="750" y="84" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(4))->title ?? 'Lanjut Ngobrol' }} →</text>
+                        </g>
                         </g>
 
-                        {{-- ░░ CYCLIST (Right) — interaktif: hover → hotspot 5 ░░ --}}
-                        <g class="illo" data-spot="5" @mouseenter="activeHotspot = 5" @click="activeHotspot = 5; scrollTo(hotspots[5]?.target_section)">
+                        {{-- ░░ CYCLIST (Right) — hover: chip label, klik: lompat ke section ░░ --}}
+                        <g class="illo" data-spot="5" tabindex="0" role="button"
+                           aria-label="{{ optional($hotspots->get(5))->title ?? 'Quick Coffee Stop' }}"
+                           @click="scrollTo('{{ optional($hotspots->get(5))->target_section ?? '#outlet' }}')"
+                           @keydown.enter="scrollTo('{{ optional($hotspots->get(5))->target_section ?? '#outlet' }}')">
                         <circle cx="870" cy="186" r="13" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
                         <path d="M858,181 C861,172 882,172 884,181 Z" fill="#f4f4f0"/>
                         <line x1="870" y1="199" x2="870" y2="258" stroke="#f4f4f0" stroke-width="3.5"/>
@@ -643,6 +705,10 @@
                         <line x1="888" y1="264" x2="914" y2="308" stroke="#f4f4f0" stroke-width="3"/>
                         <line x1="883" y1="252" x2="898" y2="252" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round"/>
                         <line x1="851" y1="258" x2="864" y2="258" stroke="#f4f4f0" stroke-width="4" stroke-linecap="round"/>
+                        <g class="illo-label">
+                            <rect x="790" y="64" width="190" height="30" rx="15" fill="#f4f4f0"/>
+                            <text x="885" y="84" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(5))->title ?? 'Quick Coffee Stop' }} →</text>
+                        </g>
                         </g>
 
                         {{-- ░░ Ambient doodle beans (floating) ░░ --}}
@@ -656,42 +722,10 @@
 
                     </svg>
 
-                    {{-- ── HOTSPOT PINS ── --}}
-                    @foreach($hotspots as $i => $spot)
-                        <button
-                            type="button"
-                            class="hotspot-btn"
-                            :class="activeHotspot === {{ $i }} ? 'active' : ''"
-                            style="left: {{ $spot->x_percent }}%; top: {{ $spot->y_percent }}%;"
-                            @click="activeHotspot = {{ $i }}"
-                            :aria-label="'{{ $spot->label }}'"
-                        >
-                            <span class="hotspot-ring"></span>
-                            <span class="hotspot-dot"></span>
-                        </button>
-                    @endforeach
-
                     {{-- ── Cursor spotlight — glow mengikuti kursor ── --}}
                     <div class="spotlight" aria-hidden="true"></div>
                 </div>
             </div>
-        </div>
-
-        {{-- ── INFO CARD ── --}}
-        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
-            <div>
-                <p class="t-label" style="color: var(--mid); margin-bottom: 0.5rem;">
-                    <span x-text="`Poin ${ activeHotspot + 1 } dari ${ hotspots.length }`"></span>
-                </p>
-                <h3 class="f-display t-h3 c-white" style="margin-bottom: 0.4rem;" x-text="hotspots[activeHotspot]?.title"></h3>
-                <p class="t-body c-light" style="max-width: 52ch;" x-text="hotspots[activeHotspot]?.description"></p>
-            </div>
-            <button
-                type="button"
-                @click="scrollTo(hotspots[activeHotspot]?.target_section)"
-                style="flex-shrink:0; padding: 0.8rem 1.75rem; background: var(--white); color: var(--black); border: none; border-radius: 100px; font-family: var(--font-body); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; transition: background 0.2s;"
-                x-text="hotspots[activeHotspot]?.action_text"
-            ></button>
         </div>
 
     </div>
@@ -701,21 +735,30 @@
 {{-- ═══════════════════════════════════════════════
      02 · MENU
 ═══════════════════════════════════════════════ --}}
-<section id="menu" class="theme-light" style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border);">
+<section id="menu" class="theme-light"
+    x-data="{
+        activeTab: '{{ $categories->first()->slug ?? 'coffee' }}',
+        sel: 0,
+        imgOk: true,
+        items: {{ Js::from($allItems) }},
+        get visible() { return this.items.filter(i => i.cat === this.activeTab); },
+        get cur() { return this.items[this.sel]; }
+    }"
+    style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border);">
     <div class="section-wrap">
         <div class="menu-split">
 
-            {{-- KIRI — foto lini produk (ala Tuku) --}}
+            {{-- KIRI — foto item yang dipilih (klik item di kanan untuk ganti) --}}
             <div class="menu-photo">
-                {{--
-                    TODO: Ganti dengan foto asli, taruh file di public/images/menu/:
-                    <img src="/images/menu/katalog.jpg" alt="Lini produk SSST Coffee">
-                --}}
-                <div class="img-placeholder" style="height:100%;">
+                {{-- Foto otomatis dari public/images/menu/{nama-item}.jpg/png/webp --}}
+                <img x-show="cur && cur.img && imgOk" :src="cur && cur.img" :alt="cur ? cur.name : 'SSST Coffee'"
+                     style="width:100%; height:100%; object-fit:cover; display:block;"
+                     @@error="imgOk = false" @load="imgOk = true">
+                <div class="img-placeholder" x-show="!cur || !cur.img || !imgOk" style="height:100%;">
                     <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="15" r="2"/></svg>
-                    <span>Foto lini produk SSST</span>
+                    <span x-text="cur ? 'Foto: ' + cur.name : 'Foto lini produk SSST'"></span>
                 </div>
-                <p class="menu-photo-label f-accent">Lini produk SSST.</p>
+                <p class="menu-photo-label f-accent" x-text="cur ? cur.name + '.' : 'Lini produk SSST.'"></p>
             </div>
 
             {{-- KANAN — katalog menu --}}
@@ -752,83 +795,28 @@
                 </div>
 
         {{-- Category Tabs --}}
-        <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 1.5rem; margin-bottom: 0;" class="no-scrollbar">
+        <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 1.5rem; margin-bottom: 0.5rem;" class="no-scrollbar">
             @foreach($categories as $cat)
                 <button
                     type="button"
                     class="tab-btn"
                     :class="activeTab === '{{ $cat->slug }}' ? 'active' : ''"
-                    @click="activeTab = '{{ $cat->slug }}'"
+                    @click="activeTab = '{{ $cat->slug }}'; sel = items.findIndex(i => i.cat === '{{ $cat->slug }}'); imgOk = true"
                 >{{ $cat->name }}</button>
             @endforeach
         </div>
 
-        {{-- Menu Grid by Category --}}
-        @foreach($categories as $cat)
-        <div class="menu-scroll" x-show="activeTab === '{{ $cat->slug }}'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
-
-            {{-- Column headers --}}
-            <div class="menu-row" style="display: grid; grid-template-columns: 1fr 60px 60px 70px 70px; gap: 0 1rem; padding: 0 1rem 0.75rem; margin-bottom: 0; border-bottom: 1px solid var(--border);">
-                <span class="t-label c-mid">Item</span>
-                <span class="t-label c-mid" style="text-align:center;">Ice</span>
-                <span class="t-label c-mid" style="text-align:center;">Hot</span>
-                <span class="t-label c-mid" style="text-align:center;">½ L</span>
-                <span class="t-label c-mid" style="text-align:center;">1 L</span>
-            </div>
-
-            @forelse($cat->menuItems as $item)
-            <div class="menu-row" style="display: grid; grid-template-columns: 1fr 60px 60px 70px 70px; gap: 0 1rem; padding: 1.25rem 1rem; border-bottom: 1px solid var(--border); align-items: center; transition: background 0.2s;" onmouseover="this.style.background='var(--card)'" onmouseout="this.style.background='transparent'">
-
-                {{-- Item + photo placeholder --}}
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    {{--
-                        TODO: Ganti div.img-placeholder dengan:
-                        <img src="/images/menu/{{ Str::slug($item->name) }}.jpg" alt="{{ $item->name }}"
-                             style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0;">
-                    --}}
-                    <div style="width:52px; height:52px; border-radius:10px; flex-shrink:0; background: var(--card); border: 1px dashed var(--border); display:flex; align-items:center; justify-content:center;">
-                        <svg width="18" height="18" fill="none" stroke="var(--mid)" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="15" r="2"/></svg>
-                    </div>
-                    <div>
-                        <p class="f-body c-white" style="font-weight:600; font-size:0.92rem;">{{ $item->name }}</p>
-                        @if($item->description)
-                            <p class="c-mid" style="font-size:0.75rem; margin-top:0.2rem; max-width:40ch; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $item->description }}</p>
-                        @endif
-                    </div>
-                </div>
-
-                <p style="text-align:center; font-weight:700; font-size:0.9rem; color: var(--white);">{{ $item->price_ice ? $item->price_ice : '—' }}</p>
-                <p style="text-align:center; font-weight:700; font-size:0.9rem; color: var(--light);">{{ $item->price_hot ? $item->price_hot : '—' }}</p>
-                <p style="text-align:center; font-weight:600; font-size:0.85rem; color: var(--mid);">{{ $item->price_half_liter ? $item->price_half_liter : '—' }}</p>
-                <p style="text-align:center; font-weight:600; font-size:0.85rem; color: var(--mid);">{{ $item->price_one_liter ? $item->price_one_liter : '—' }}</p>
-
-            </div>
-            @empty
-            <p class="c-mid t-body" style="padding: 2rem 1rem;">Belum ada item.</p>
-            @endforelse
-
-        </div>
-        @endforeach
-
-        {{-- Note harga --}}
-        <p class="t-label c-mid" style="margin-top: 1.5rem;">* Harga dalam ribuan rupiah (Rp 000)</p>
-
-        {{-- Ready-to-go Bottles --}}
-        <div style="margin-top: 4rem;">
-            <p class="t-label c-mid" style="margin-bottom: 0.75rem;">Siap bawa pulang</p>
-            <h3 class="f-display t-h2 c-white" style="margin-bottom: 2rem;">Botol & Kaleng</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
-                @foreach($bottlesAndCans as $b)
-                <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 160px;">
-                    <p class="t-label c-mid" style="margin-bottom: 0.5rem;">{{ $b['sub'] }}</p>
-                    <h4 class="f-heading c-white" style="font-size: 1.4rem; letter-spacing: -0.02em;">{{ $b['name'] }}</h4>
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1.25rem;">
-                        <span style="font-family:var(--font-body); font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding: 0.35rem 0.85rem; border-radius: 100px; border: 1px solid var(--border); color: var(--light);">{{ $b['size'] }}</span>
-                        <span class="c-mid" style="font-size:0.85rem; font-weight:600;">Rp {{ $b['price'] }}.000</span>
-                    </div>
-                </div>
-                @endforeach
-            </div>
+        {{-- Daftar item — klik untuk lihat foto & keterangan di panel kiri --}}
+        <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+            <template x-for="(it, idx) in visible" :key="it.name + idx">
+                <button type="button" class="menu-item-btn"
+                        :class="sel === items.indexOf(it) ? 'active' : ''"
+                        @click="sel = items.indexOf(it); imgOk = true">
+                    <span class="mi-name" x-text="it.name"></span>
+                    <span class="mi-desc" x-text="it.description"></span>
+                </button>
+            </template>
+            <p class="c-mid" x-show="visible.length === 0" style="padding: 1.5rem 1rem; font-size: 0.9rem;">Belum ada item.</p>
         </div>
 
             </div>{{-- /menu-catalog --}}
@@ -1113,7 +1101,9 @@
 
             {{-- Brand --}}
             <div>
-                <a href="#" class="nav-logo" style="display:block; margin-bottom:1rem;">ssst</a>
+                <a href="#" class="nav-logo" style="display:block; margin-bottom:1rem;" aria-label="SSST Coffee">
+                    <img src="/images/logo.png" alt="SSST Coffee" style="height: 48px; width: auto; display: block;">
+                </a>
                 <p class="t-body c-mid" style="max-width:38ch; margin-bottom:1.75rem;">
                     Coffee Companion / Lifestyle Compliment.<br>
                     Titik singgah buat ngopi di sela aktivitas harian.

@@ -26,35 +26,28 @@ class LandingController extends Controller
 
         $outlets = Outlet::orderBy('sort_order', 'asc')->get();
 
-        // Botol & Kaleng ready to go variants (as specified in PRD & mockups)
-        $bottlesAndCans = [
-            [
-                'name' => 'ESSST KOPI SUSU',
-                'size' => '1 L',
-                'bg' => 'bg-white text-ssst-black',
-                'badge_bg' => 'bg-ssst-black text-white',
-                'sub' => 'Varian Botol Kulkas',
-                'price' => '100',
-            ],
-            [
-                'name' => 'ESSST KOPI SUSU',
-                'size' => '500 ML',
-                'bg' => 'bg-[#2b2b2e] text-white border border-[#3e3e42]',
-                'badge_bg' => 'bg-white text-ssst-black',
-                'sub' => 'Varian Botol Personal',
-                'price' => '50',
-            ],
-            [
-                'name' => 'ESSST AMER',
-                'size' => '250 ML',
-                'bg' => 'bg-[#48484a] text-white',
-                'badge_bg' => 'bg-ssst-black text-white',
-                'sub' => 'Americano Kaleng Dingin',
-                'price' => '25',
-            ],
-        ];
+        // Semua item menu (flat, urut kategori) untuk panel foto interaktif.
+        // Foto dicari otomatis di public/images/menu/{slug}.{jpg,jpeg,png,webp}
+        $allItems = $categories->flatMap(function ($cat) {
+            return $cat->menuItems->map(function ($item) use ($cat) {
+                $slug = \Str::slug($item->name);
+                $img = null;
+                foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
+                    if (file_exists(public_path("images/menu/{$slug}.{$ext}"))) {
+                        $img = asset("images/menu/{$slug}.{$ext}");
+                        break;
+                    }
+                }
+                return [
+                    'cat' => $cat->slug,
+                    'name' => $item->name,
+                    'description' => $item->description,
+                    'img' => $img,
+                ];
+            });
+        })->values();
 
-        return view('landing', compact('hotspots', 'categories', 'products', 'outlets', 'bottlesAndCans'));
+        return view('landing', compact('hotspots', 'categories', 'products', 'outlets', 'allItems'));
     }
 }
 
