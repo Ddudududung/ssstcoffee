@@ -115,6 +115,7 @@
         }
 
         html { scroll-behavior: smooth; }
+        section[id], footer[id] { scroll-margin-top: 84px; }
 
         body {
             font-family: var(--font-body);
@@ -319,8 +320,33 @@
             transform-box: fill-box;
         }
 
+        /* Polaroid & hanger bergoyang lembut */
+        @keyframes swing {
+            0%, 100% { transform: rotate(-2deg); }
+            50%      { transform: rotate(2.5deg); }
+        }
+        .swing { animation: swing 5s ease-in-out infinite; transform-box: fill-box; transform-origin: top center; }
+        .swing.d2 { animation-delay: 0.8s; }
+        .swing.d3 { animation-delay: 1.6s; }
+
+        /* Elemen melayang naik-turun (pin, bubble) */
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-5px); }
+        }
+        .bob { animation: bob 3.2s ease-in-out infinite; transform-box: fill-box; }
+        .bob.d2 { animation-delay: 0.7s; }
+
+        /* Heart like berdenyut */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50%      { transform: scale(1.25); opacity: 1; }
+        }
+        .heart { animation: heartbeat 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+        .heart.d2 { animation-delay: 0.6s; }
+
         @media (prefers-reduced-motion: reduce) {
-            .steam path, .wind line, .beans { animation: none !important; }
+            .steam path, .wind line, .beans, .swing, .bob, .heart { animation: none !important; }
         }
 
         /* ── MENU TAB ── */
@@ -525,6 +551,7 @@
             <li><a href="#gallery">Galeri</a></li>
             <li><a href="#cerita">Cerita</a></li>
             <li><a href="#outlet">Lokasi</a></li>
+            <li><a href="#about">About</a></li>
         </ul>
 
         {{-- Tagline pill --}}
@@ -548,176 +575,234 @@
             Start<br>with <span class="f-display">SSST.</span>
         </h1>
 
-        <p class="t-body c-light" style="max-width: 46ch; margin-bottom: 3rem;">
+        <p class="t-body c-light" style="max-width: 52ch; margin-bottom: 3rem;">
             Titik singgah buat ngopi. Setelah makan, setelah lari, atau sebelum pulang.<br>
-            Arahkan kursor ke gambar — klik bagian yang menyala untuk lompat ke section-nya.
+            Gambar di bawah ini adalah isi web-nya — arahkan kursor, bagian yang menyala bisa diklik:
+            <span class="c-white" style="font-weight:600;">Menu · Merch · Galeri · Cerita · Lokasi · About</span>
         </p>
 
-        {{-- ── HOTSPOT STAGE ── --}}
-        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 1.5rem;">
+        {{-- ── ILLUSTRATION STAGE — full-bleed, tiap zona = satu section web ── --}}
+        <div style="margin-bottom: 3rem; margin-left: calc(-1 * min(1.5rem, max(0px, (100vw - 1320px) / -2))); margin-right: calc(-1 * min(1.5rem, max(0px, (100vw - 1320px) / -2)));">
             {{-- Scrollable on mobile --}}
             <div style="overflow-x: auto;" class="no-scrollbar">
-                <div id="illo-stage" style="position: relative; min-width: 860px; height: 400px;">
+                <div id="illo-stage" style="position: relative; min-width: 1100px; aspect-ratio: 1400 / 480;">
 
-                    {{-- ── ILLUSTRATION (SVG vector scene) ── --}}
-                    <svg style="width:100%; height:100%; display:block;" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {{-- ── ILLUSTRATION (SVG vector scene — kiri→kanan: Lokasi, Galeri, Cerita, Menu, Merch, About) ── --}}
+                    <svg style="width:100%; height:100%; display:block;" viewBox="0 0 1400 480" preserveAspectRatio="xMidYMax meet" fill="none" xmlns="http://www.w3.org/2000/svg">
 
                         {{-- Ground --}}
-                        <line x1="30" y1="360" x2="970" y2="360" stroke="#2e2e2c" stroke-width="2"/>
+                        <line x1="30" y1="430" x2="1370" y2="430" stroke="#2e2e2c" stroke-width="2"/>
 
-                        {{-- ░░ KEDAI SSST (Left) — hover: chip label, klik: lompat ke section ░░ --}}
-                        <g class="illo" data-spot="0" tabindex="0" role="button"
-                           aria-label="{{ optional($hotspots->get(0))->title ?? 'Kedai SSST Coffee' }}"
-                           @click="scrollTo('{{ optional($hotspots->get(0))->target_section ?? '#outlet' }}')"
-                           @keydown.enter="scrollTo('{{ optional($hotspots->get(0))->target_section ?? '#outlet' }}')">
-                        {{-- Roof/canopy --}}
-                        <polygon points="40,170 240,170 225,138 55,138" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
-                        <line x1="82" y1="138" x2="68" y2="170" stroke="#f4f4f0" stroke-width="1.5"/>
-                        <line x1="116" y1="138" x2="103" y2="170" stroke="#f4f4f0" stroke-width="1.5"/>
-                        <line x1="150" y1="138" x2="138" y2="170" stroke="#f4f4f0" stroke-width="1.5"/>
-                        <line x1="184" y1="138" x2="172" y2="170" stroke="#f4f4f0" stroke-width="1.5"/>
-                        <line x1="218" y1="138" x2="207" y2="170" stroke="#f4f4f0" stroke-width="1.5"/>
-                        {{-- Signboard --}}
-                        <rect x="78" y="100" width="128" height="32" rx="4" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2"/>
-                        <text x="142" y="122" fill="#f4f4f0" font-family="'Creato Display',sans-serif" font-weight="800" font-size="14" text-anchor="middle" letter-spacing="1">ssst coffee</text>
-                        {{-- Building --}}
-                        <rect x="55" y="170" width="175" height="185" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
-                        {{-- Window --}}
-                        <rect x="72" y="198" width="72" height="65" fill="#212120" stroke="#f4f4f0" stroke-width="2"/>
-                        <line x1="108" y1="198" x2="108" y2="263" stroke="#f4f4f0" stroke-width="1.5"/>
-                        <line x1="72" y1="231" x2="144" y2="231" stroke="#f4f4f0" stroke-width="1.5"/>
-                        {{-- Door --}}
-                        <rect x="160" y="200" width="50" height="155" fill="#212120" stroke="#f4f4f0" stroke-width="2"/>
-                        <circle cx="170" cy="277" r="3" fill="#f4f4f0"/>
-                        {{-- Chip label muncul saat hover --}}
-                        <g class="illo-label">
-                            <rect x="52" y="42" width="180" height="30" rx="15" fill="#f4f4f0"/>
-                            <text x="142" y="62" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(0))->title ?? 'Kedai SSST Coffee' }} →</text>
-                        </g>
-                        </g>
-
-                        {{-- ░░ TOTEBAG (2nd left) — hover: chip label, klik: lompat ke section ░░ --}}
-                        <g class="illo" data-spot="1" tabindex="0" role="button"
-                           aria-label="{{ optional($hotspots->get(1))->title ?? 'Bawa Pulang Merch' }}"
-                           @click="scrollTo('{{ optional($hotspots->get(1))->target_section ?? '#merch' }}')"
-                           @keydown.enter="scrollTo('{{ optional($hotspots->get(1))->target_section ?? '#merch' }}')">
-                        <path d="M292,256 C292,232 328,232 328,256" stroke="#f4f4f0" stroke-width="2.5" fill="none"/>
-                        <path d="M282,256 L338,256 L332,348 L288,348 Z" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
-                        <circle cx="300" cy="292" r="2.5" fill="#f4f4f0"/>
-                        <circle cx="320" cy="292" r="2.5" fill="#f4f4f0"/>
-                        <path d="M302,305 Q310,313 318,305" stroke="#f4f4f0" stroke-width="2" fill="none"/>
-                        <g class="illo-label">
-                            <rect x="220" y="188" width="180" height="30" rx="15" fill="#f4f4f0"/>
-                            <text x="310" y="208" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(1))->title ?? 'Bawa Pulang Merch' }} →</text>
-                        </g>
+                        {{-- ░░ ZONA 1 · LOKASI — kedai + pin peta → section #outlet ░░ --}}
+                        <g class="illo" tabindex="0" role="button" aria-label="Lokasi kedai SSST"
+                           @click="scrollTo('#outlet')" @keydown.enter="scrollTo('#outlet')">
+                            {{-- Map pin melayang --}}
+                            <g class="bob">
+                                <circle cx="180" cy="96" r="15" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
+                                <polygon points="171,103 189,103 180,124" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
+                                <circle cx="180" cy="96" r="5" fill="#f4f4f0"/>
+                            </g>
+                            <line x1="180" y1="124" x2="180" y2="140" stroke="#2e2e2c" stroke-width="2" stroke-dasharray="4 4"/>
+                            {{-- Signboard --}}
+                            <rect x="95" y="140" width="170" height="34" rx="5" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2"/>
+                            <text x="180" y="163" fill="#f4f4f0" font-family="'Creato Display',sans-serif" font-weight="800" font-size="15" text-anchor="middle" letter-spacing="1">ssst coffee</text>
+                            {{-- Awning --}}
+                            <polygon points="60,208 300,208 282,174 78,174" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
+                            <line x1="108" y1="174" x2="94" y2="208" stroke="#f4f4f0" stroke-width="1.5"/>
+                            <line x1="146" y1="174" x2="132" y2="208" stroke="#f4f4f0" stroke-width="1.5"/>
+                            <line x1="180" y1="174" x2="180" y2="208" stroke="#f4f4f0" stroke-width="1.5"/>
+                            <line x1="214" y1="174" x2="200" y2="208" stroke="#f4f4f0" stroke-width="1.5"/>
+                            <line x1="252" y1="174" x2="238" y2="208" stroke="#f4f4f0" stroke-width="1.5"/>
+                            {{-- Building --}}
+                            <rect x="75" y="208" width="210" height="222" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
+                            {{-- Window --}}
+                            <rect x="92" y="232" width="82" height="72" fill="#212120" stroke="#f4f4f0" stroke-width="2"/>
+                            <line x1="133" y1="232" x2="133" y2="304" stroke="#f4f4f0" stroke-width="1.5"/>
+                            <line x1="92" y1="268" x2="174" y2="268" stroke="#f4f4f0" stroke-width="1.5"/>
+                            {{-- Door --}}
+                            <rect x="200" y="236" width="62" height="194" fill="#212120" stroke="#f4f4f0" stroke-width="2"/>
+                            <circle cx="212" cy="330" r="3.5" fill="#f4f4f0"/>
+                            {{-- Chip label --}}
+                            <g class="illo-label">
+                                <rect x="95" y="30" width="170" height="32" rx="16" fill="#f4f4f0"/>
+                                <text x="180" y="52" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="14" fill="#111110">Lokasi →</text>
+                            </g>
                         </g>
 
-                        {{-- ░░ CUP (Centre) — hover: chip label, klik: lompat ke section, uap beranimasi ░░ --}}
-                        <g class="illo" data-spot="2" tabindex="0" role="button"
-                           aria-label="{{ optional($hotspots->get(2))->title ?? 'Menu kopi' }}"
-                           @click="scrollTo('{{ optional($hotspots->get(2))->target_section ?? '#menu' }}')"
-                           @keydown.enter="scrollTo('{{ optional($hotspots->get(2))->target_section ?? '#menu' }}')">
-                        <rect x="378" y="172" width="84" height="13" rx="4" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
-                        <path d="M388,185 L450,185 L443,355 L395,355 Z" fill="#2a2a28" stroke="#f4f4f0" stroke-width="2.5"/>
-                        <text x="419" y="278" fill="#f4f4f0" font-family="'Creato Display',sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="-0.5">ssst</text>
-                        {{-- Steam (animated) --}}
-                        <g class="steam" fill="none" stroke="#737370" stroke-width="2" stroke-linecap="round">
-                            <path d="M400,156 Q404,146 400,136"/>
-                            <path d="M419,153 Q423,143 419,133"/>
-                            <path d="M438,157 Q442,147 438,137"/>
-                        </g>
-                        <g class="illo-label">
-                            <rect x="330" y="64" width="180" height="30" rx="15" fill="#f4f4f0"/>
-                            <text x="420" y="84" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(2))->title ?? 'Menu kopi' }} →</text>
-                        </g>
-                        </g>
-
-                        {{-- ░░ RUNNER (Centre-right) — hover: chip label, klik: lompat ke section, angin beranimasi ░░ --}}
-                        <g class="illo" data-spot="3" tabindex="0" role="button"
-                           aria-label="{{ optional($hotspots->get(3))->title ?? 'Post Run Pitstop' }}"
-                           @click="scrollTo('{{ optional($hotspots->get(3))->target_section ?? '#cerita' }}')"
-                           @keydown.enter="scrollTo('{{ optional($hotspots->get(3))->target_section ?? '#cerita' }}')">
-                        <circle cx="547" cy="182" r="14" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
-                        <line x1="537" y1="178" x2="557" y2="178" stroke="#f4f4f0" stroke-width="2"/>
-                        <circle cx="543" cy="183" r="1.5" fill="#f4f4f0"/>
-                        <circle cx="551" cy="183" r="1.5" fill="#f4f4f0"/>
-                        <line x1="547" y1="196" x2="554" y2="260" stroke="#f4f4f0" stroke-width="3.5" stroke-linecap="round"/>
-                        <polyline points="554,260 575,292 592,348" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <polyline points="554,260 530,296 512,330" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <polyline points="549,218 572,230 568,252" stroke="#f4f4f0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                        <polyline points="549,218 524,228 520,248" stroke="#f4f4f0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                        <rect x="587" y="345" width="20" height="8" rx="3" fill="#f4f4f0"/>
-                        <rect x="501" y="327" width="18" height="8" rx="3" fill="#f4f4f0"/>
-                        {{-- Wind lines (animated) --}}
-                        <g class="wind" stroke="#737370" stroke-width="2">
-                            <line x1="487" y1="228" x2="510" y2="228"/>
-                            <line x1="481" y1="241" x2="506" y2="241"/>
-                            <line x1="476" y1="255" x2="502" y2="255"/>
-                        </g>
-                        <g class="illo-label">
-                            <rect x="460" y="64" width="180" height="30" rx="15" fill="#f4f4f0"/>
-                            <text x="550" y="84" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(3))->title ?? 'Post Run Pitstop' }} →</text>
-                        </g>
+                        {{-- ░░ ZONA 2 · GALERI — polaroid di tali → section #gallery ░░ --}}
+                        <g class="illo" tabindex="0" role="button" aria-label="Galeri foto"
+                           @click="scrollTo('#gallery')" @keydown.enter="scrollTo('#gallery')">
+                            {{-- Tali --}}
+                            <path d="M330,130 Q450,170 570,130" stroke="#737370" stroke-width="2" fill="none"/>
+                            {{-- Polaroid 1 --}}
+                            <g class="swing">
+                                <line x1="372" y1="146" x2="372" y2="168" stroke="#737370" stroke-width="2"/>
+                                <rect x="337" y="168" width="70" height="86" rx="3" fill="#f4f4f0"/>
+                                <rect x="344" y="176" width="56" height="46" fill="#212120"/>
+                                <polyline points="348,214 360,198 370,210 378,202 396,218" stroke="#737370" stroke-width="2" fill="none"/>
+                                <circle cx="354" cy="188" r="3" fill="#737370"/>
+                                <line x1="348" y1="234" x2="392" y2="234" stroke="#737370" stroke-width="2.5" stroke-linecap="round"/>
+                            </g>
+                            {{-- Polaroid 2 (miring) --}}
+                            <g class="swing d2" transform="rotate(-5 450 150)">
+                                <line x1="450" y1="158" x2="450" y2="180" stroke="#737370" stroke-width="2"/>
+                                <rect x="415" y="180" width="70" height="86" rx="3" fill="#f4f4f0"/>
+                                <rect x="422" y="188" width="56" height="46" fill="#212120"/>
+                                <circle cx="440" cy="205" r="9" fill="none" stroke="#737370" stroke-width="2"/>
+                                <circle cx="460" cy="212" r="6" fill="none" stroke="#737370" stroke-width="2"/>
+                                <line x1="426" y1="246" x2="470" y2="246" stroke="#737370" stroke-width="2.5" stroke-linecap="round"/>
+                            </g>
+                            {{-- Polaroid 3 (miring kanan) --}}
+                            <g class="swing d3" transform="rotate(4 528 146)">
+                                <line x1="528" y1="144" x2="528" y2="166" stroke="#737370" stroke-width="2"/>
+                                <rect x="493" y="166" width="70" height="86" rx="3" fill="#f4f4f0"/>
+                                <rect x="500" y="174" width="56" height="46" fill="#212120"/>
+                                <path d="M506,210 Q520,192 534,210" stroke="#737370" stroke-width="2" fill="none"/>
+                                <line x1="506" y1="232" x2="550" y2="232" stroke="#737370" stroke-width="2.5" stroke-linecap="round"/>
+                            </g>
+                            {{-- Chip label --}}
+                            <g class="illo-label">
+                                <rect x="365" y="60" width="170" height="32" rx="16" fill="#f4f4f0"/>
+                                <text x="450" y="82" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="14" fill="#111110">Galeri →</text>
+                            </g>
                         </g>
 
-                        {{-- ░░ TWO PEOPLE AT TABLE — hover: chip label, klik: lompat ke section ░░ --}}
-                        <g class="illo" data-spot="4" tabindex="0" role="button"
-                           aria-label="{{ optional($hotspots->get(4))->title ?? 'Lanjut Ngobrol' }}"
-                           @click="scrollTo('{{ optional($hotspots->get(4))->target_section ?? '#cerita' }}')"
-                           @keydown.enter="scrollTo('{{ optional($hotspots->get(4))->target_section ?? '#cerita' }}')">
-                        <circle cx="700" cy="210" r="14" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
-                        <circle cx="696" cy="210" r="1.5" fill="#f4f4f0"/>
-                        <circle cx="704" cy="210" r="1.5" fill="#f4f4f0"/>
-                        <path d="M686,355 C686,256 714,256 714,355" fill="#1c1c1a" stroke="#f4f4f0" stroke-width="2.5"/>
-                        <circle cx="765" cy="210" r="14" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
-                        <circle cx="761" cy="210" r="1.5" fill="#f4f4f0"/>
-                        <circle cx="769" cy="210" r="1.5" fill="#f4f4f0"/>
-                        <path d="M751,355 C751,256 779,256 779,355" fill="#1c1c1a" stroke="#f4f4f0" stroke-width="2.5"/>
-                        {{-- Table --}}
-                        <line x1="672" y1="272" x2="792" y2="272" stroke="#f4f4f0" stroke-width="4" stroke-linecap="round"/>
-                        <line x1="732" y1="272" x2="732" y2="355" stroke="#f4f4f0" stroke-width="3.5"/>
-                        <rect x="713" y="257" width="11" height="14" rx="2" fill="#f4f4f0"/>
-                        <rect x="742" y="257" width="11" height="14" rx="2" fill="#f4f4f0"/>
-                        <g class="illo-label">
-                            <rect x="660" y="64" width="180" height="30" rx="15" fill="#f4f4f0"/>
-                            <text x="750" y="84" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(4))->title ?? 'Lanjut Ngobrol' }} →</text>
-                        </g>
-                        </g>
-
-                        {{-- ░░ CYCLIST (Right) — hover: chip label, klik: lompat ke section ░░ --}}
-                        <g class="illo" data-spot="5" tabindex="0" role="button"
-                           aria-label="{{ optional($hotspots->get(5))->title ?? 'Quick Coffee Stop' }}"
-                           @click="scrollTo('{{ optional($hotspots->get(5))->target_section ?? '#outlet' }}')"
-                           @keydown.enter="scrollTo('{{ optional($hotspots->get(5))->target_section ?? '#outlet' }}')">
-                        <circle cx="870" cy="186" r="13" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
-                        <path d="M858,181 C861,172 882,172 884,181 Z" fill="#f4f4f0"/>
-                        <line x1="870" y1="199" x2="870" y2="258" stroke="#f4f4f0" stroke-width="3.5"/>
-                        <line x1="870" y1="224" x2="885" y2="243" stroke="#f4f4f0" stroke-width="3"/>
-                        <rect x="885" y="238" width="9" height="11" rx="1.5" fill="#f4f4f0"/>
-                        {{-- Wheels --}}
-                        <circle cx="834" cy="308" r="28" stroke="#f4f4f0" stroke-width="3" fill="#141413"/>
-                        <circle cx="834" cy="308" r="4" fill="#f4f4f0"/>
-                        <circle cx="914" cy="308" r="28" stroke="#f4f4f0" stroke-width="3" fill="#141413"/>
-                        <circle cx="914" cy="308" r="4" fill="#f4f4f0"/>
-                        {{-- Frame --}}
-                        <polygon points="834,308 869,308 888,264 859,264" stroke="#f4f4f0" stroke-width="3" fill="none"/>
-                        <line x1="859" y1="264" x2="834" y2="308" stroke="#f4f4f0" stroke-width="3"/>
-                        <line x1="888" y1="264" x2="914" y2="308" stroke="#f4f4f0" stroke-width="3"/>
-                        <line x1="883" y1="252" x2="898" y2="252" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round"/>
-                        <line x1="851" y1="258" x2="864" y2="258" stroke="#f4f4f0" stroke-width="4" stroke-linecap="round"/>
-                        <g class="illo-label">
-                            <rect x="790" y="64" width="190" height="30" rx="15" fill="#f4f4f0"/>
-                            <text x="885" y="84" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="13" fill="#111110">{{ optional($hotspots->get(5))->title ?? 'Quick Coffee Stop' }} →</text>
-                        </g>
+                        {{-- ░░ ZONA 3 · CERITA — orang baca jurnal → section #cerita ░░ --}}
+                        <g class="illo" tabindex="0" role="button" aria-label="Cerita SSST"
+                           @click="scrollTo('#cerita')" @keydown.enter="scrollTo('#cerita')">
+                            {{-- Speech bubble */}
+                            <g class="bob d2">
+                                <rect x="600" y="120" width="76" height="40" rx="12" fill="#212120" stroke="#f4f4f0" stroke-width="2"/>
+                                <circle cx="622" cy="140" r="2.5" fill="#f4f4f0"/>
+                                <circle cx="638" cy="140" r="2.5" fill="#f4f4f0"/>
+                                <circle cx="654" cy="140" r="2.5" fill="#f4f4f0"/>
+                                <polygon points="622,160 636,160 624,174" fill="#212120" stroke="#f4f4f0" stroke-width="2"/>
+                            </g>
+                            {{-- Orang duduk bersila --}}
+                            <circle cx="648" cy="212" r="14" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
+                            <line x1="638" y1="208" x2="658" y2="208" stroke="#f4f4f0" stroke-width="2"/>
+                            <circle cx="644" cy="213" r="1.5" fill="#f4f4f0"/>
+                            <circle cx="652" cy="213" r="1.5" fill="#f4f4f0"/>
+                            <path d="M648,226 C630,226 626,250 630,272" stroke="#f4f4f0" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                            {{-- Kaki bersila --}}
+                            <path d="M634,320 C640,306 656,306 662,320" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round" fill="none"/>
+                            <path d="M628,326 C638,314 658,314 668,326" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round" fill="none"/>
+                            {{-- Buku terbuka di pangkuan --}}
+                            <polygon points="608,290 644,278 644,312 608,322" fill="#f4f4f0" stroke="#111110" stroke-width="1.5"/>
+                            <polygon points="680,290 644,278 644,312 680,322" fill="#f4f4f0" stroke="#111110" stroke-width="1.5"/>
+                            <line x1="644" y1="278" x2="644" y2="312" stroke="#111110" stroke-width="1.5"/>
+                            <line x1="620" y1="292" x2="636" y2="288" stroke="#737370" stroke-width="1.5"/>
+                            <line x1="620" y1="300" x2="636" y2="296" stroke="#737370" stroke-width="1.5"/>
+                            <line x1="652" y1="288" x2="668" y2="292" stroke="#737370" stroke-width="1.5"/>
+                            {{-- Chip label --}}
+                            <g class="illo-label">
+                                <rect x="580" y="52" width="160" height="32" rx="16" fill="#f4f4f0"/>
+                                <text x="660" y="74" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="14" fill="#111110">Cerita →</text>
+                            </g>
                         </g>
 
-                        {{-- ░░ Ambient doodle beans (floating) ░░ --}}
+                        {{-- ░░ ZONA 4 · MENU — cup SSST besar (pusat) → section #menu ░░ --}}
+                        <g class="illo" tabindex="0" role="button" aria-label="Menu kopi SSST"
+                           @click="scrollTo('#menu')" @keydown.enter="scrollTo('#menu')">
+                            {{-- Steam (animated) --}}
+                            <g class="steam" fill="none" stroke="#737370" stroke-width="2.5" stroke-linecap="round">
+                                <path d="M818,148 Q823,136 818,124"/>
+                                <path d="M848,144 Q853,132 848,120"/>
+                                <path d="M878,148 Q883,136 878,124"/>
+                            </g>
+                            {{-- Lid --}}
+                            <rect x="800" y="162" width="96" height="15" rx="5" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
+                            {{-- Body --}}
+                            <path d="M812,177 L884,177 L872,415 L824,415 Z" fill="#2a2a28" stroke="#f4f4f0" stroke-width="2.5"/>
+                            <text x="848" y="310" fill="#f4f4f0" font-family="'Creato Display',sans-serif" font-weight="900" font-size="24" text-anchor="middle" letter-spacing="-0.5">ssst</text>
+                            {{-- Biji kopi kecil di kaki cup --}}
+                            <ellipse cx="786" cy="408" rx="7" ry="11" transform="rotate(25 786 408)" stroke="#737370" stroke-width="1.5"/>
+                            <ellipse cx="912" cy="412" rx="7" ry="11" transform="rotate(-20 912 412)" stroke="#737370" stroke-width="1.5"/>
+                            {{-- Chip label --}}
+                            <g class="illo-label">
+                                <rect x="770" y="52" width="160" height="32" rx="16" fill="#f4f4f0"/>
+                                <text x="850" y="74" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="14" fill="#111110">Menu →</text>
+                            </g>
+                        </g>
+
+                        {{-- ░░ ZONA 5 · MERCH — rak gantung: kaos, totebag, tumbler → section #merch ░░ --}}
+                        <g class="illo" tabindex="0" role="button" aria-label="Merchandise SSST"
+                           @click="scrollTo('#merch')" @keydown.enter="scrollTo('#merch')">
+                            {{-- Rak --}}
+                            <line x1="975" y1="256" x2="975" y2="430" stroke="#f4f4f0" stroke-width="3.5"/>
+                            <line x1="1145" y1="256" x2="1145" y2="430" stroke="#f4f4f0" stroke-width="3.5"/>
+                            <line x1="968" y1="256" x2="1152" y2="256" stroke="#f4f4f0" stroke-width="3.5" stroke-linecap="round"/>
+                            {{-- Hanger + kaos --}}
+                            <g class="swing">
+                                <line x1="1030" y1="256" x2="1030" y2="278" stroke="#f4f4f0" stroke-width="2"/>
+                                <path d="M1030,282 C1018,286 1012,296 1012,308 L1048,308 C1048,296 1042,286 1030,282 Z" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
+                                <text x="1030" y="304" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="900" font-size="11" fill="#f4f4f0">ssst</text>
+                            </g>
+                            {{-- Totebag digantung --}}
+                            <g class="swing d2">
+                                <path d="M1105,256 C1105,272 1105,268 1105,278" stroke="#f4f4f0" stroke-width="2"/>
+                                <path d="M1092,280 C1092,268 1118,268 1118,280" stroke="#f4f4f0" stroke-width="2.5" fill="none"/>
+                                <path d="M1084,280 L1126,280 L1122,352 L1088,352 Z" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
+                                <circle cx="1097" cy="308" r="2" fill="#f4f4f0"/>
+                                <circle cx="1113" cy="308" r="2" fill="#f4f4f0"/>
+                                <path d="M1099,318 Q1105,323 1111,318" stroke="#f4f4f0" stroke-width="1.5" fill="none"/>
+                            </g>
+                            {{-- Tumbler di tanah --}}
+                            <rect x="1158" y="376" width="18" height="46" rx="6" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
+                            <rect x="1161" y="368" width="12" height="10" rx="3" fill="#f4f4f0"/>
+                            {{-- Chip label --}}
+                            <g class="illo-label">
+                                <rect x="980" y="52" width="160" height="32" rx="16" fill="#f4f4f0"/>
+                                <text x="1060" y="74" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="14" fill="#111110">Merch →</text>
+                            </g>
+                        </g>
+
+                        {{-- ░░ ZONA 6 · ABOUT — orang selfie (sosmed) → footer #about ░░ --}}
+                        <g class="illo" tabindex="0" role="button" aria-label="Tentang SSST & sosial media"
+                           @click="scrollTo('#about')" @keydown.enter="scrollTo('#about')">
+                            {{-- Orang berdiri membelakangi (selfie) --}}
+                            <circle cx="1235" cy="196" r="14" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
+                            <path d="M1224,192 C1227,183 1243,183 1246,192" fill="#f4f4f0"/>
+                            <line x1="1235" y1="210" x2="1235" y2="290" stroke="#f4f4f0" stroke-width="3.5" stroke-linecap="round"/>
+                            {{-- Lengan pegang HP --}}
+                            <polyline points="1235,228 1272,222 1296,206" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round" fill="none"/>
+                            <rect x="1288" y="188" width="26" height="42" rx="5" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
+                            <circle cx="1301" cy="196" r="2.5" fill="#f4f4f0"/>
+                            {{-- Kaki --}}
+                            <line x1="1235" y1="290" x2="1222" y2="352" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="1235" y1="290" x2="1250" y2="352" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round"/>
+                            <rect x="1212" y="350" width="20" height="8" rx="3" fill="#f4f4f0"/>
+                            <rect x="1244" y="350" width="20" height="8" rx="3" fill="#f4f4f0"/>
+                            {{-- Love / like melayang (animated) --}}
+                            <g class="heart" fill="#f4f4f0">
+                                <path d="M1326,150 C1326,142 1318,142 1318,150 C1318,142 1310,142 1310,150 C1310,158 1318,164 1318,164 C1318,164 1326,158 1326,150 Z" transform="scale(1.15) translate(-46,-22)"/>
+                            </g>
+                            <g class="heart d2" fill="none" stroke="#f4f4f0" stroke-width="2">
+                                <path d="M1356,112 C1356,106 1350,106 1350,112 C1350,106 1344,106 1344,112 C1344,118 1350,122 1350,122 C1350,122 1356,118 1356,112 Z"/>
+                            </g>
+                            {{-- Sparkle --}}
+                            <path d="M1330,80 L1330,92 M1324,86 L1336,86" stroke="#737370" stroke-width="2" stroke-linecap="round"/>
+                            {{-- Chip label --}}
+                            <g class="illo-label">
+                                <rect x="1215" y="52" width="160" height="32" rx="16" fill="#f4f4f0"/>
+                                <text x="1295" y="74" text-anchor="middle" font-family="'Creato Display',sans-serif" font-weight="700" font-size="14" fill="#111110">About →</text>
+                            </g>
+                        </g>
+
+                        {{-- ░░ Ambient: beans floating + burung + semak kecil ░░ --}}
                         <g class="beans" opacity="0.18" stroke="#f4f4f0" stroke-width="1.5" fill="none">
-                            <ellipse cx="250" cy="115" rx="7" ry="11" transform="rotate(25 250 115)"/>
-                            <path d="M250 105 Q246 115 250 125"/>
-                            <ellipse cx="500" cy="108" rx="7" ry="11" transform="rotate(-30 500 108)"/>
-                            <path d="M500 98 Q504 108 500 118"/>
-                            <ellipse cx="640" cy="116" rx="6" ry="10" transform="rotate(40 640 116)"/>
+                            <ellipse cx="360" cy="330" rx="7" ry="11" transform="rotate(25 360 330)"/>
+                            <path d="M360 320 Q356 330 360 340"/>
+                            <ellipse cx="760" cy="90" rx="7" ry="11" transform="rotate(-30 760 90)"/>
+                            <path d="M760 80 Q764 90 760 100"/>
+                            <ellipse cx="1180" cy="140" rx="6" ry="10" transform="rotate(40 1180 140)"/>
+                        </g>
+                        <path d="M960,70 Q966,62 972,70 Q978,62 984,70" stroke="#737370" stroke-width="2" fill="none"/>
+                        <path d="M300,420 Q306,412 312,420 Q318,412 324,420" stroke="#737370" stroke-width="2" fill="none"/>
+                        <g stroke="#737370" stroke-width="2" stroke-linecap="round">
+                            <line x1="705" y1="430" x2="705" y2="418"/>
+                            <line x1="711" y1="430" x2="714" y2="420"/>
+                            <line x1="699" y1="430" x2="696" y2="420"/>
                         </g>
 
                     </svg>
@@ -1093,7 +1178,7 @@
 {{-- ═══════════════════════════════════════════════
      07 · FOOTER
 ═══════════════════════════════════════════════ --}}
-<footer style="background: var(--dark); border-top: 1px solid var(--border); padding: 5rem 0 3rem;">
+<footer id="about" style="background: var(--dark); border-top: 1px solid var(--border); padding: 5rem 0 3rem; scroll-margin-top: 80px;">
     <div class="section-wrap">
 
         {{-- Top row: Brand + Social + Nav --}}
