@@ -254,6 +254,65 @@
         .hotspot-btn:hover .hotspot-dot,
         .hotspot-btn.active .hotspot-dot { transform: scale(1.35); background: var(--cream); }
 
+        /* ── INTERACTIVE ILLUSTRATION — glow ala tuku.coffee, palet hitam/abu/putih ── */
+        .illo {
+            cursor: pointer;
+            transition: filter 0.35s ease, opacity 0.35s ease;
+        }
+        .illo:hover {
+            filter: drop-shadow(0 0 6px rgba(244,244,240,0.55))
+                    drop-shadow(0 0 24px rgba(244,244,240,0.22));
+        }
+        /* Saat satu bagian di-hover, bagian lain meredup → fokus */
+        #illo-stage svg:has(.illo:hover) .illo:not(:hover) { opacity: 0.35; }
+
+        /* Cursor spotlight — cahaya lembut mengikuti kursor */
+        .spotlight {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 45%),
+                        rgba(244,244,240,0.07), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #illo-stage:hover .spotlight { opacity: 1; }
+
+        /* Animasi ambient */
+        @keyframes steam-rise {
+            0%   { transform: translateY(0);    opacity: 0; }
+            30%  { opacity: 1; }
+            100% { transform: translateY(-12px); opacity: 0; }
+        }
+        .steam path {
+            animation: steam-rise 2.8s ease-in-out infinite;
+            transform-box: fill-box;
+        }
+        .steam path:nth-child(2) { animation-delay: 0.45s; }
+        .steam path:nth-child(3) { animation-delay: 0.9s; }
+
+        @keyframes wind-dash { to { stroke-dashoffset: -24; } }
+        .wind line {
+            stroke-dasharray: 12 8;
+            animation: wind-dash 1.1s linear infinite;
+        }
+        .wind line:nth-child(2) { animation-delay: 0.2s; }
+        .wind line:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes floaty {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-6px); }
+        }
+        .beans {
+            animation: floaty 4s ease-in-out infinite;
+            transform-box: fill-box;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .steam path, .wind line, .beans { animation: none !important; }
+        }
+
         /* ── MENU TAB ── */
         .tab-btn {
             font-family: var(--font-body);
@@ -277,8 +336,45 @@
         .menu-scroll { overflow-x: auto; }
         .menu-row { min-width: 480px; }
 
+        /* ── SECTION THEMES — ritme gelap/terang/abu (palet netral SSST) ──
+           Semua warna inline pakai var(), jadi cukup remap variabel di sini
+           dan seluruh isi section otomatis jadi versi terang. */
+        .theme-light {
+            --black:  #f5f5f7;  /* latar terang: Putih SSST */
+            --dark:   #ececee;  /* latar abu muda */
+            --card:   #ffffff;
+            --border: #c9c9ce;
+            --mid:    #737375;  /* Abu sedang */
+            --light:  #48484a;  /* Abu gelap */
+            --white:  #1d1d1f;  /* teks utama jadi tinta: Hitam SSST */
+            --cream:  #1d1d1f;
+        }
+
+        /* ── MENU SPLIT — foto kiri, katalog kanan (acuan Tuku) ── */
+        .menu-split { display: grid; grid-template-columns: 1fr 1.15fr; gap: 3rem; align-items: start; }
+        .menu-split > * { min-width: 0; }
+        .menu-photo {
+            position: sticky; top: 90px;
+            aspect-ratio: 4 / 5;
+            border-radius: 20px; overflow: hidden;
+            background: var(--card); border: 1px solid var(--border);
+        }
+        .menu-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .menu-photo-label {
+            position: absolute; top: 1.25rem; left: 1.25rem;
+            padding: 0.45rem 1.1rem; border-radius: 100px;
+            background: rgba(245,245,247,0.92); color: #1d1d1f;
+            font-size: 1.35rem; line-height: 1.1;
+        }
+        .menu-photo .img-placeholder { border-radius: 0; border: none; }
+        @media (max-width: 900px) {
+            .menu-split { grid-template-columns: 1fr; gap: 2rem; }
+            .menu-photo { position: static; aspect-ratio: 16 / 10; }
+        }
+
         /* ── GRID 2 KOLOM — collapse di mobile ── */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+        .grid-2 > *, .footer-grid > * { min-width: 0; }
         .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; padding-bottom: 3.5rem; border-bottom: 1px solid var(--border); }
         @media (max-width: 900px) {
             .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
@@ -373,6 +469,15 @@
             const nav = document.getElementById('site-nav');
             if (nav) nav.classList.toggle('scrolled', window.scrollY > 40);
         });
+        // Spotlight mengikuti kursor di atas ilustrasi hero
+        const stage = document.getElementById('illo-stage');
+        if (stage) {
+            stage.addEventListener('mousemove', (e) => {
+                const r = stage.getBoundingClientRect();
+                stage.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+                stage.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+            });
+        }
     },
     scrollTo(selector) {
         const el = document.querySelector(selector);
@@ -422,14 +527,14 @@
 
         <p class="t-body c-light" style="max-width: 46ch; margin-bottom: 3rem;">
             Titik singgah buat ngopi. Setelah makan, setelah lari, atau sebelum pulang.<br>
-            Klik titik di gambar untuk tahu lebih.
+            Arahkan kursor ke gambar — tiap bagiannya menyala dan punya cerita.
         </p>
 
         {{-- ── HOTSPOT STAGE ── --}}
         <div style="background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 1.5rem;">
             {{-- Scrollable on mobile --}}
             <div style="overflow-x: auto;" class="no-scrollbar">
-                <div style="position: relative; min-width: 860px; height: 400px;">
+                <div id="illo-stage" style="position: relative; min-width: 860px; height: 400px;">
 
                     {{-- ── ILLUSTRATION (SVG vector scene) ── --}}
                     <svg style="width:100%; height:100%; display:block;" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -437,7 +542,8 @@
                         {{-- Ground --}}
                         <line x1="30" y1="360" x2="970" y2="360" stroke="#2e2e2c" stroke-width="2"/>
 
-                        {{-- ░░ KEDAI SSST (Left) ░░ --}}
+                        {{-- ░░ KEDAI SSST (Left) — interaktif: hover → hotspot 0 ░░ --}}
+                        <g class="illo" data-spot="0" @mouseenter="activeHotspot = 0" @click="activeHotspot = 0; scrollTo(hotspots[0]?.target_section)">
                         {{-- Roof/canopy --}}
                         <polygon points="40,170 240,170 225,138 55,138" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
                         <line x1="82" y1="138" x2="68" y2="170" stroke="#f4f4f0" stroke-width="1.5"/>
@@ -457,24 +563,32 @@
                         {{-- Door --}}
                         <rect x="160" y="200" width="50" height="155" fill="#212120" stroke="#f4f4f0" stroke-width="2"/>
                         <circle cx="170" cy="277" r="3" fill="#f4f4f0"/>
+                        </g>
 
-                        {{-- ░░ TOTEBAG (2nd left) ░░ --}}
+                        {{-- ░░ TOTEBAG (2nd left) — interaktif: hover → hotspot 1 ░░ --}}
+                        <g class="illo" data-spot="1" @mouseenter="activeHotspot = 1" @click="activeHotspot = 1; scrollTo(hotspots[1]?.target_section)">
                         <path d="M292,256 C292,232 328,232 328,256" stroke="#f4f4f0" stroke-width="2.5" fill="none"/>
                         <path d="M282,256 L338,256 L332,348 L288,348 Z" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
                         <circle cx="300" cy="292" r="2.5" fill="#f4f4f0"/>
                         <circle cx="320" cy="292" r="2.5" fill="#f4f4f0"/>
                         <path d="M302,305 Q310,313 318,305" stroke="#f4f4f0" stroke-width="2" fill="none"/>
+                        </g>
 
-                        {{-- ░░ CUP (Centre) ░░ --}}
+                        {{-- ░░ CUP (Centre) — interaktif: hover → hotspot 2, uap beranimasi ░░ --}}
+                        <g class="illo" data-spot="2" @mouseenter="activeHotspot = 2" @click="activeHotspot = 2; scrollTo(hotspots[2]?.target_section)">
                         <rect x="378" y="172" width="84" height="13" rx="4" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
                         <path d="M388,185 L450,185 L443,355 L395,355 Z" fill="#2a2a28" stroke="#f4f4f0" stroke-width="2.5"/>
                         <text x="419" y="278" fill="#f4f4f0" font-family="'Creato Display',sans-serif" font-weight="900" font-size="18" text-anchor="middle" letter-spacing="-0.5">ssst</text>
-                        {{-- Steam --}}
-                        <path d="M400,156 Q404,146 400,136" stroke="#2e2e2c" stroke-width="2" stroke-linecap="round" fill="none"/>
-                        <path d="M419,153 Q423,143 419,133" stroke="#2e2e2c" stroke-width="2" stroke-linecap="round" fill="none"/>
-                        <path d="M438,157 Q442,147 438,137" stroke="#2e2e2c" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        {{-- Steam (animated) --}}
+                        <g class="steam" fill="none" stroke="#737370" stroke-width="2" stroke-linecap="round">
+                            <path d="M400,156 Q404,146 400,136"/>
+                            <path d="M419,153 Q423,143 419,133"/>
+                            <path d="M438,157 Q442,147 438,137"/>
+                        </g>
+                        </g>
 
-                        {{-- ░░ RUNNER (Centre-right) ░░ --}}
+                        {{-- ░░ RUNNER (Centre-right) — interaktif: hover → hotspot 3, angin beranimasi ░░ --}}
+                        <g class="illo" data-spot="3" @mouseenter="activeHotspot = 3" @click="activeHotspot = 3; scrollTo(hotspots[3]?.target_section)">
                         <circle cx="547" cy="182" r="14" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
                         <line x1="537" y1="178" x2="557" y2="178" stroke="#f4f4f0" stroke-width="2"/>
                         <circle cx="543" cy="183" r="1.5" fill="#f4f4f0"/>
@@ -486,12 +600,16 @@
                         <polyline points="549,218 524,228 520,248" stroke="#f4f4f0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
                         <rect x="587" y="345" width="20" height="8" rx="3" fill="#f4f4f0"/>
                         <rect x="501" y="327" width="18" height="8" rx="3" fill="#f4f4f0"/>
-                        {{-- Wind lines --}}
-                        <line x1="487" y1="228" x2="510" y2="228" stroke="#2e2e2c" stroke-width="2"/>
-                        <line x1="481" y1="241" x2="506" y2="241" stroke="#2e2e2c" stroke-width="2"/>
-                        <line x1="476" y1="255" x2="502" y2="255" stroke="#2e2e2c" stroke-width="2"/>
+                        {{-- Wind lines (animated) --}}
+                        <g class="wind" stroke="#737370" stroke-width="2">
+                            <line x1="487" y1="228" x2="510" y2="228"/>
+                            <line x1="481" y1="241" x2="506" y2="241"/>
+                            <line x1="476" y1="255" x2="502" y2="255"/>
+                        </g>
+                        </g>
 
-                        {{-- ░░ TWO PEOPLE AT TABLE ░░ --}}
+                        {{-- ░░ TWO PEOPLE AT TABLE — interaktif: hover → hotspot 4 ░░ --}}
+                        <g class="illo" data-spot="4" @mouseenter="activeHotspot = 4" @click="activeHotspot = 4; scrollTo(hotspots[4]?.target_section)">
                         <circle cx="700" cy="210" r="14" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
                         <circle cx="696" cy="210" r="1.5" fill="#f4f4f0"/>
                         <circle cx="704" cy="210" r="1.5" fill="#f4f4f0"/>
@@ -505,8 +623,10 @@
                         <line x1="732" y1="272" x2="732" y2="355" stroke="#f4f4f0" stroke-width="3.5"/>
                         <rect x="713" y="257" width="11" height="14" rx="2" fill="#f4f4f0"/>
                         <rect x="742" y="257" width="11" height="14" rx="2" fill="#f4f4f0"/>
+                        </g>
 
-                        {{-- ░░ CYCLIST (Right) ░░ --}}
+                        {{-- ░░ CYCLIST (Right) — interaktif: hover → hotspot 5 ░░ --}}
+                        <g class="illo" data-spot="5" @mouseenter="activeHotspot = 5" @click="activeHotspot = 5; scrollTo(hotspots[5]?.target_section)">
                         <circle cx="870" cy="186" r="13" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2.5"/>
                         <path d="M858,181 C861,172 882,172 884,181 Z" fill="#f4f4f0"/>
                         <line x1="870" y1="199" x2="870" y2="258" stroke="#f4f4f0" stroke-width="3.5"/>
@@ -523,9 +643,10 @@
                         <line x1="888" y1="264" x2="914" y2="308" stroke="#f4f4f0" stroke-width="3"/>
                         <line x1="883" y1="252" x2="898" y2="252" stroke="#f4f4f0" stroke-width="3" stroke-linecap="round"/>
                         <line x1="851" y1="258" x2="864" y2="258" stroke="#f4f4f0" stroke-width="4" stroke-linecap="round"/>
+                        </g>
 
-                        {{-- ░░ Ambient doodle beans ░░ --}}
-                        <g opacity="0.18" stroke="#f4f4f0" stroke-width="1.5" fill="none">
+                        {{-- ░░ Ambient doodle beans (floating) ░░ --}}
+                        <g class="beans" opacity="0.18" stroke="#f4f4f0" stroke-width="1.5" fill="none">
                             <ellipse cx="250" cy="115" rx="7" ry="11" transform="rotate(25 250 115)"/>
                             <path d="M250 105 Q246 115 250 125"/>
                             <ellipse cx="500" cy="108" rx="7" ry="11" transform="rotate(-30 500 108)"/>
@@ -549,6 +670,9 @@
                             <span class="hotspot-dot"></span>
                         </button>
                     @endforeach
+
+                    {{-- ── Cursor spotlight — glow mengikuti kursor ── --}}
+                    <div class="spotlight" aria-hidden="true"></div>
                 </div>
             </div>
         </div>
@@ -577,40 +701,55 @@
 {{-- ═══════════════════════════════════════════════
      02 · MENU
 ═══════════════════════════════════════════════ --}}
-<section id="menu" style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border);">
+<section id="menu" class="theme-light" style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border);">
     <div class="section-wrap">
+        <div class="menu-split">
 
-        {{-- Header --}}
-        <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 2rem; margin-bottom: 3rem;">
-            <div>
-                <p class="t-label c-mid" style="margin-bottom: 0.75rem;">Menu</p>
-                <h2 class="f-display t-h1 c-white">Ringkas,<br>familiar.</h2>
-            </div>
-
-            {{-- Delivery Partners --}}
-            <div>
-                <p class="t-label c-mid" style="margin-bottom: 0.75rem;">Pesan antar via</p>
-                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                    {{-- TODO: ganti # dengan URL GrabFood outlet --}}
-                    <a href="#" target="_blank" rel="noopener" class="partner-badge">
-                        <span style="width:8px; height:8px; border-radius:50%; background:#00b14f; flex-shrink:0;"></span>
-                        GrabFood
-                    </a>
-                    {{-- TODO: ganti # dengan URL GoFood outlet --}}
-                    <a href="#" target="_blank" rel="noopener" class="partner-badge">
-                        <span style="width:8px; height:8px; border-radius:50%; background:#e62129; flex-shrink:0;"></span>
-                        GoFood
-                    </a>
-                    {{-- TODO: ganti # dengan URL ShopeeFood outlet --}}
-                    <a href="#" target="_blank" rel="noopener" class="partner-badge">
-                        <span style="width:8px; height:8px; border-radius:50%; background:#f05123; flex-shrink:0;"></span>
-                        ShopeeFood
-                    </a>
+            {{-- KIRI — foto lini produk (ala Tuku) --}}
+            <div class="menu-photo">
+                {{--
+                    TODO: Ganti dengan foto asli, taruh file di public/images/menu/:
+                    <img src="/images/menu/katalog.jpg" alt="Lini produk SSST Coffee">
+                --}}
+                <div class="img-placeholder" style="height:100%;">
+                    <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="15" r="2"/></svg>
+                    <span>Foto lini produk SSST</span>
                 </div>
+                <p class="menu-photo-label f-accent">Lini produk SSST.</p>
             </div>
-        </div>
 
-        <hr class="hr-thin" style="margin-bottom: 2.5rem;">
+            {{-- KANAN — katalog menu --}}
+            <div class="menu-catalog">
+
+                {{-- Header --}}
+                <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem;">
+                    <div>
+                        <p class="t-label c-mid" style="margin-bottom: 0.75rem;">Menu</p>
+                        <h2 class="t-h1 c-white">Ringkas,<br>familiar.</h2>
+                    </div>
+
+                    {{-- Delivery Partners --}}
+                    <div>
+                        <p class="t-label c-mid" style="margin-bottom: 0.75rem;">Pesan antar via</p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            {{-- TODO: ganti # dengan URL GrabFood outlet --}}
+                            <a href="#" target="_blank" rel="noopener" class="partner-badge">
+                                <span style="width:8px; height:8px; border-radius:50%; background:#00b14f; flex-shrink:0;"></span>
+                                GrabFood
+                            </a>
+                            {{-- TODO: ganti # dengan URL GoFood outlet --}}
+                            <a href="#" target="_blank" rel="noopener" class="partner-badge">
+                                <span style="width:8px; height:8px; border-radius:50%; background:#e62129; flex-shrink:0;"></span>
+                                GoFood
+                            </a>
+                            {{-- TODO: ganti # dengan URL ShopeeFood outlet --}}
+                            <a href="#" target="_blank" rel="noopener" class="partner-badge">
+                                <span style="width:8px; height:8px; border-radius:50%; background:#f05123; flex-shrink:0;"></span>
+                                ShopeeFood
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
         {{-- Category Tabs --}}
         <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 1.5rem; margin-bottom: 0;" class="no-scrollbar">
@@ -692,6 +831,8 @@
             </div>
         </div>
 
+            </div>{{-- /menu-catalog --}}
+        </div>{{-- /menu-split --}}
     </div>
 </section>
 
@@ -760,7 +901,7 @@
 {{-- ═══════════════════════════════════════════════
      04 · GALLERY
 ═══════════════════════════════════════════════ --}}
-<section id="gallery" style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border);">
+<section id="gallery" class="theme-light" style="padding: 6rem 0; background: var(--dark); border-bottom: 1px solid var(--border);">
     <div style="max-width: 1320px; margin: 0 auto;">
 
         {{-- Header (full width) --}}
@@ -806,7 +947,7 @@
 {{-- ═══════════════════════════════════════════════
      05 · CERITA SSST COFFEE
 ═══════════════════════════════════════════════ --}}
-<section id="cerita" style="padding: 6rem 0; background: var(--dark); border-bottom: 1px solid var(--border);">
+<section id="cerita" class="theme-light" style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border);">
     <div class="section-wrap">
 
         <div class="grid-2">
