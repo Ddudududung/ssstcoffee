@@ -81,23 +81,46 @@ class SSSTDatabaseSeeder extends Seeder
             Hotspot::updateOrCreate(['label' => $hotspot['label']], $hotspot);
         }
 
-        // 2. Categories & Menu Items — MENU BARU: KOPI, SNACK, LATT'E, NON COFFEE (tanpa Add On)
-        $catKopi = Category::updateOrCreate(['slug' => 'kopi'], ['name' => 'KOPI', 'sort_order' => 1]);
-        $catSnack = Category::updateOrCreate(['slug' => 'snack'], ['name' => 'SNACK', 'sort_order' => 2]);
-        $catLatte = Category::updateOrCreate(['slug' => 'latte'], ['name' => "LATT'E", 'sort_order' => 3]);
-        $catNonCoffee = Category::updateOrCreate(['slug' => 'non-coffee'], ['name' => 'NON COFFEE', 'sort_order' => 4]);
+        // 2. Categories & Menu Items — menu resmi (harga tersimpan di DB, web tidak menampilkannya)
+        $catCoffee  = Category::updateOrCreate(['slug' => 'coffee'],        ['name' => 'SSST Coffee',    'sort_order' => 1]);
+        $catClassic = Category::updateOrCreate(['slug' => 'classic-coffee'],['name' => 'Classic Coffee', 'sort_order' => 2]);
+        $catOthers  = Category::updateOrCreate(['slug' => 'others'],        ['name' => 'Others',         'sort_order' => 3]);
+        $catMock    = Category::updateOrCreate(['slug' => 'mocktails'],     ['name' => 'Mocktails',      'sort_order' => 4]);
 
-        // Hapus kategori lama (Coffee, Classic Coffee, Others, Add On) beserta item-nya (cascade)
-        Category::whereNotIn('slug', ['kopi', 'snack', 'latte', 'non-coffee'])->delete();
+        // Hapus kategori di luar menu resmi (Add On, KOPI/SNACK/dll lama) beserta item-nya (cascade)
+        Category::whereNotIn('slug', ['coffee', 'classic-coffee', 'others', 'mocktails'])->delete();
 
-        // Item KOPI — dari menu baru, TANPA HARGA (web tidak menampilkan harga)
         $menuItems = [
-            ['category_id' => $catKopi->id, 'name' => 'Es Kopi Susu Tesss T', 'description' => 'Kopi susu signature SSST.', 'sort_order' => 1],
-            ['category_id' => $catKopi->id, 'name' => 'Kopi Susu BOL:D', 'description' => 'Kopi susu berkarakter pekat.', 'sort_order' => 2],
-            ['category_id' => $catKopi->id, 'name' => 'Kopi Susu Almond', 'description' => 'Gurih almond bertemu espresso.', 'sort_order' => 3],
-            ['category_id' => $catKopi->id, 'name' => 'Kopi Susu Pandan', 'description' => 'Wangi pandan yang khas.', 'sort_order' => 4],
-            ['category_id' => $catKopi->id, 'name' => 'Americano', 'description' => 'Espresso dan air — sederhana dan jujur.', 'sort_order' => 5],
-            // TODO owner: tambahkan item SNACK / LATT'E / NON COFFEE (lihat PANDUAN-KONTEN.md)
+            // SSST Coffee — kolom: Ice | Hot | 500ml | 1L
+            ['category_id' => $catCoffee->id,  'name' => 'Ssst Kopi Susu',     'description' => 'Kopi susu signature SSST.',                    'price_ice' => 20, 'price_hot' => 18,   'price_half_liter' => 50,  'price_one_liter' => 100, 'sort_order' => 1],
+            ['category_id' => $catCoffee->id,  'name' => 'Ssst Kopi BOL:D',    'description' => 'Kopi susu berkarakter pekat.',                 'price_ice' => 23, 'price_hot' => null, 'price_half_liter' => 60,  'price_one_liter' => 115, 'sort_order' => 2],
+            ['category_id' => $catCoffee->id,  'name' => 'Ssst Kopi Almond',   'description' => 'Gurih almond bertemu espresso.',               'price_ice' => 25, 'price_hot' => null, 'price_half_liter' => 65,  'price_one_liter' => 125, 'sort_order' => 3],
+            ['category_id' => $catCoffee->id,  'name' => 'Ssst Butterscotch',  'description' => 'Manis karamel mentega yang creamy.',           'price_ice' => 25, 'price_hot' => null, 'price_half_liter' => 65,  'price_one_liter' => 125, 'sort_order' => 4],
+            ['category_id' => $catCoffee->id,  'name' => 'Ssst Caramel',       'description' => 'Klasik karamel susu espresso.',                'price_ice' => 23, 'price_hot' => null, 'price_half_liter' => 65,  'price_one_liter' => 125, 'sort_order' => 5],
+            ['category_id' => $catCoffee->id,  'name' => 'Ssst Kopi Hitam',    'description' => 'Kopi hitam bersih, dingin atau hangat.',       'price_ice' => 20, 'price_hot' => 18,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 6],
+
+            // Classic Coffee — kolom: Ice | Hot
+            ['category_id' => $catClassic->id, 'name' => 'Short Black',        'description' => 'Single shot espresso murni.',                  'price_ice' => null,'price_hot' => 25,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 1],
+            ['category_id' => $catClassic->id, 'name' => 'Long Black',         'description' => 'Espresso di atas air panas.',                  'price_ice' => 25,  'price_hot' => 25,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 2],
+            ['category_id' => $catClassic->id, 'name' => 'Filter / V60',       'description' => 'Seduhan manual, karakter biji yang jujur.',    'price_ice' => 25,  'price_hot' => 25,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 3],
+            ['category_id' => $catClassic->id, 'name' => 'Piccolo',            'description' => 'Espresso dengan susu sedikit, ringan.',        'price_ice' => null,'price_hot' => 25,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 4],
+            ['category_id' => $catClassic->id, 'name' => 'Cappuccino',         'description' => 'Espresso, susu, dan busa tebal.',              'price_ice' => 30,  'price_hot' => 25,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 5],
+            ['category_id' => $catClassic->id, 'name' => 'Latte',              'description' => 'Espresso berpadu steamed milk.',               'price_ice' => 25,  'price_hot' => 25,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 6],
+            ['category_id' => $catClassic->id, 'name' => 'Magic',              'description' => 'Double ristretto dan susu — favorit lokal.',   'price_ice' => 25,  'price_hot' => 25,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 7],
+
+            // Others — kolom: Ice | Hot
+            ['category_id' => $catOthers->id,  'name' => 'Chocolate Cream Java','description' => 'Cokelat creamy dengan saji kaya.',            'price_ice' => 25,  'price_hot' => 25,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 1],
+            ['category_id' => $catOthers->id,  'name' => 'Matcha Latte',        'description' => 'Matcha murni dengan susu lembut.',             'price_ice' => 25,  'price_hot' => 25,   'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 2],
+            ['category_id' => $catOthers->id,  'name' => 'Earlgrey Candy Milk Tea','description' => 'Teh earl grey manis berbalut susu.',       'price_ice' => 20,  'price_hot' => null, 'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 3],
+            ['category_id' => $catOthers->id,  'name' => 'Earlgrey Tea',        'description' => 'Teh hitam bergamot murni.',                    'price_ice' => 20,  'price_hot' => null, 'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 4],
+            ['category_id' => $catOthers->id,  'name' => 'Sweet Maya',          'description' => 'Manis dingin yang mudah disukai.',             'price_ice' => 25,  'price_hot' => null, 'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 5],
+
+            // Mocktails — kolom: Ice
+            ['category_id' => $catMock->id,    'name' => 'Essst A-mer',         'description' => 'Mocktail signature dingin SSST.',              'price_ice' => 25,  'price_hot' => null, 'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 1],
+            ['category_id' => $catMock->id,    'name' => 'Roots',               'description' => 'Segar dengan sentuhan earthy.',                'price_ice' => 25,  'price_hot' => null, 'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 2],
+            ['category_id' => $catMock->id,    'name' => 'Pine Oasis',          'description' => 'Nanas menyegarkan di tengah hari.',            'price_ice' => 25,  'price_hot' => null, 'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 3],
+            ['category_id' => $catMock->id,    'name' => 'Black Canary',        'description' => 'Gelap, dingin, dan berani.',                   'price_ice' => 25,  'price_hot' => null, 'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 4],
+            ['category_id' => $catMock->id,    'name' => 'Sweet Caroline',      'description' => 'Manis klasik untuk penutup hari.',             'price_ice' => 25,  'price_hot' => null, 'price_half_liter' => null,'price_one_liter' => null,'sort_order' => 5],
         ];
 
         foreach ($menuItems as $item) {
