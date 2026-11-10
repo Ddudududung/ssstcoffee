@@ -15,501 +15,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        /*
-        ┌──────────────────────────────────────────────────────────────┐
-        │  SSST CUSTOM FONTS — file asli di subfolder public/fonts/,   │
-        │  salinan datar dengan nama bersih dipakai di bawah ini:      │
-        │                                                              │
-        │  Baligo (display):  Baligo-Light/Regular/Bold.otf            │
-        │  Kopi Susu (akses): KopiSusu.otf                             │
-        │  Creato Display:    CreatoDisplay-Regular/Medium/Bold/       │
-        │                     ExtraBold.otf                            │
-        └──────────────────────────────────────────────────────────────┘
-        */
-
-        /* SSST Display — Baligo (headline & wordmark) */
-        @font-face {
-            font-family: 'SSSTeam Baligo';
-            src: url('/fonts/Baligo-Light.otf') format('opentype');
-            font-weight: 300;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'SSSTeam Baligo';
-            src: url('/fonts/Baligo-Regular.otf') format('opentype');
-            font-weight: 400;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'SSSTeam Baligo';
-            src: url('/fonts/Baligo-Bold.otf') format('opentype');
-            font-weight: 700 800;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* SSST Display — Kopi Susu (aksen doodle & handwritten) */
-        @font-face {
-            font-family: 'SSST Kopi Susu';
-            src: url('/fonts/KopiSusu.otf') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* SSST Sans-Serif — Creato Display */
-        @font-face {
-            font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-Regular.otf') format('opentype');
-            font-weight: 400;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-Medium.otf') format('opentype');
-            font-weight: 500;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-Bold.otf') format('opentype');
-            font-weight: 700;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-ExtraBold.otf') format('opentype');
-            font-weight: 800;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* ── Base ── */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            /* Baligo hanya untuk logo & kata kunci (brand book) */
-            --font-display:  'SSSTeam Baligo', 'Plus Jakarta Sans', system-ui, sans-serif;
-            --font-accent:   'SSST Kopi Susu', 'Caveat', 'Kalam', cursive;
-            /* Judul & isi = Creato Display (brand book: ExtraBold/Bold utk judul) */
-            --font-heading:  'Creato Display', 'Plus Jakarta Sans', system-ui, sans-serif;
-            --font-body:     'Creato Display', 'Plus Jakarta Sans', system-ui, sans-serif;
-
-            --black:   #111110;
-            --dark:    #1a1a18;
-            --card:    #212120;
-            --border:  #2e2e2c;
-            --mid:     #737370;
-            --light:   #c8c8c4;
-            --white:   #f4f4f0;
-            --cream:   #f0ece4;
-
-            --accent:  #e8e0d2; /* warm off-white accent */
-        }
-
-        html { scroll-behavior: smooth; }
-        section[id], footer[id] { scroll-margin-top: 84px; }
-
-        body {
-            font-family: var(--font-body);
-            background-color: var(--black);
-            color: var(--white);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Utility font classes */
-        .f-display  { font-family: var(--font-display); }  /* Baligo — logo & kata kunci saja */
-        .f-accent   { font-family: var(--font-accent); }   /* Kopi Susu — aksen tulisan tangan */
-        .f-heading  { font-family: var(--font-heading); font-weight: 800; }
-        .f-body     { font-family: var(--font-body); }
-
-        /* Type scale — judul selalu Creato Display (brand book) */
-        .t-hero     { font-family: var(--font-heading); font-weight: 800; font-size: clamp(3.5rem, 8vw, 8rem); line-height: 0.95; letter-spacing: -0.03em; }
-        .t-h1       { font-family: var(--font-heading); font-weight: 800; font-size: clamp(2.5rem, 5vw, 5rem);  line-height: 1.0;  letter-spacing: -0.02em; }
-        .t-h2       { font-family: var(--font-heading); font-weight: 800; font-size: clamp(1.75rem, 3vw, 3rem); line-height: 1.1;  letter-spacing: -0.02em; }
-        .t-h3       { font-family: var(--font-heading); font-weight: 700; font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1.2; }
-        .t-body     { font-size: clamp(0.9rem, 1.1vw, 1.05rem); line-height: 1.7; }
-        .t-small    { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
-        .t-label    { font-size: 0.7rem;  letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; }
-
-        /* Colors */
-        .c-white    { color: var(--white); }
-        .c-light    { color: var(--light); }
-        .c-mid      { color: var(--mid); }
-        .c-black    { color: var(--black); }
-        .c-cream    { color: var(--cream); }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--black); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-        /* no-scrollbar utility */
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* Thin divider */
-        .hr-thin { border: none; border-top: 1px solid var(--border); }
-
-        /* Backdrop blur helper */
-        .glass { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); }
-
-        /* ── NAV ── */
-        #site-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-        #site-nav.scrolled {
-            background: rgba(17,17,16,0.88);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-inner {
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            height: 68px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-        }
-        .nav-logo {
-            font-family: var(--font-display);
-            font-size: 1.65rem;
-            letter-spacing: -0.02em;
-            color: var(--white);
-            text-decoration: none;
-            line-height: 1;
-        }
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            list-style: none;
-        }
-        .nav-links a {
-            font-family: var(--font-body);
-            font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--light);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--white); }
-
-        /* ── NAV RESPONSIVE (360px+, brand book) ── */
-        .nav-tagline { color: var(--mid); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-body); }
-        @media (max-width: 900px) {
-            .nav-inner { gap: 1rem; padding: 0 1rem; height: 60px; }
-            .nav-links { gap: 1.1rem; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
-            .nav-links::-webkit-scrollbar { display: none; }
-            .nav-links a { font-size: 0.7rem; letter-spacing: 0.08em; white-space: nowrap; }
-            .nav-tagline { display: none; }
-            #hero { padding-top: 60px; }
-        }
-
-        /* ── SECTION WRAPPER ── */
-        .section-wrap {
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        /* ── HOTSPOT ── */
-        @keyframes ping {
-            0%   { transform: scale(1); opacity: 1; }
-            75%  { transform: scale(2.2); opacity: 0; }
-            100% { transform: scale(2.2); opacity: 0; }
-        }
-        .hotspot-btn { position: absolute; transform: translate(-50%, -50%); cursor: pointer; z-index: 20; }
-        .hotspot-ring {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: rgba(244,244,240,0.25);
-            animation: ping 2.2s cubic-bezier(0,0,0.2,1) infinite;
-        }
-        .hotspot-dot {
-            position: relative;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--white);
-            border: 2px solid var(--black);
-            transition: transform 0.2s;
-        }
-        .hotspot-btn:hover .hotspot-dot,
-        .hotspot-btn.active .hotspot-dot { transform: scale(1.35); background: var(--cream); }
-
-        /* ── INTERACTIVE ILLUSTRATION — glow ala tuku.coffee, palet hitam/abu/putih ── */
-        .illo {
-            cursor: pointer;
-            transition: filter 0.35s ease, opacity 0.35s ease;
-        }
-        .illo:hover, .illo:focus-visible {
-            filter: drop-shadow(0 0 6px rgba(244,244,240,0.55))
-                    drop-shadow(0 0 24px rgba(244,244,240,0.22));
-        }
-        /* Saat satu bagian di-hover, bagian lain meredup → fokus */
-        #illo-stage svg:has(.illo:hover) .illo:not(:hover) { opacity: 0.35; }
-
-        /* Chip label — muncul di atas bagian yang di-hover (ala Tuku) */
-        .illo-label {
-            opacity: 0;
-            transform: translateY(6px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            pointer-events: none;
-        }
-        .illo:hover .illo-label,
-        .illo:focus-visible .illo-label { opacity: 1; transform: translateY(0); }
-
-        /* Cursor spotlight — cahaya lembut mengikuti kursor */
-        .spotlight {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 10;
-            background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 45%),
-                        rgba(244,244,240,0.07), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        #illo-stage:hover .spotlight { opacity: 1; }
-
-        /* Animasi ambient */
-        @keyframes steam-rise {
-            0%   { transform: translateY(0);    opacity: 0; }
-            30%  { opacity: 1; }
-            100% { transform: translateY(-12px); opacity: 0; }
-        }
-        .steam path {
-            animation: steam-rise 2.8s ease-in-out infinite;
-            transform-box: fill-box;
-        }
-        .steam path:nth-child(2) { animation-delay: 0.45s; }
-        .steam path:nth-child(3) { animation-delay: 0.9s; }
-
-        @keyframes wind-dash { to { stroke-dashoffset: -24; } }
-        .wind line {
-            stroke-dasharray: 12 8;
-            animation: wind-dash 1.1s linear infinite;
-        }
-        .wind line:nth-child(2) { animation-delay: 0.2s; }
-        .wind line:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes floaty {
-            0%, 100% { transform: translateY(0); }
-            50%      { transform: translateY(-6px); }
-        }
-        .beans {
-            animation: floaty 4s ease-in-out infinite;
-            transform-box: fill-box;
-        }
-
-        /* Polaroid & hanger bergoyang lembut */
-        @keyframes swing {
-            0%, 100% { transform: rotate(-2deg); }
-            50%      { transform: rotate(2.5deg); }
-        }
-        .swing { animation: swing 5s ease-in-out infinite; transform-box: fill-box; transform-origin: top center; }
-        .swing.d2 { animation-delay: 0.8s; }
-        .swing.d3 { animation-delay: 1.6s; }
-
-        /* Elemen melayang naik-turun (pin, bubble) */
-        @keyframes bob {
-            0%, 100% { transform: translateY(0); }
-            50%      { transform: translateY(-5px); }
-        }
-        .bob { animation: bob 3.2s ease-in-out infinite; transform-box: fill-box; }
-        .bob.d2 { animation-delay: 0.7s; }
-
-        /* Heart like berdenyut */
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50%      { transform: scale(1.25); opacity: 1; }
-        }
-        .heart { animation: heartbeat 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-        .heart.d2 { animation-delay: 0.6s; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .steam path, .wind line, .beans, .swing, .bob, .heart { animation: none !important; }
-        }
-
-        /* ── MENU TAB ── */
-        .tab-btn {
-            font-family: var(--font-body);
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            padding: 0.55rem 1.25rem;
-            border-radius: 100px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--mid);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-        .tab-btn:hover { color: var(--white); border-color: var(--mid); }
-        .tab-btn.active { background: var(--white); color: var(--black); border-color: var(--white); }
-
-        /* ── MENU ITEM BUTTON — klik → foto & keterangan di panel kiri ── */
-        .menu-item-btn {
-            display: block;
-            width: 100%;
-            text-align: left;
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: 14px;
-            padding: 0.9rem 1.1rem;
-            cursor: pointer;
-            font-family: var(--font-body);
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .menu-item-btn:hover { background: rgba(29,29,31,0.05); }
-        .menu-item-btn.active { background: var(--card); border-color: var(--border); }
-        .mi-name { display: block; font-weight: 700; font-size: 0.95rem; color: var(--white); }
-        .mi-desc { display: block; font-size: 0.78rem; color: var(--mid); margin-top: 0.25rem; line-height: 1.5; }
-
-        /* ── SECTION THEMES — ritme gelap/terang/abu (palet netral SSST) ──
-           Semua warna inline pakai var(), jadi cukup remap variabel di sini
-           dan seluruh isi section otomatis jadi versi terang. */
-        .theme-light {
-            --black:  #f5f5f7;  /* latar terang: Putih SSST */
-            --dark:   #ececee;  /* latar abu muda */
-            --card:   #ffffff;
-            --border: #c9c9ce;
-            --mid:    #737375;  /* Abu sedang */
-            --light:  #48484a;  /* Abu gelap */
-            --white:  #1d1d1f;  /* teks utama jadi tinta: Hitam SSST */
-            --cream:  #1d1d1f;
-        }
-
-        /* ── MENU SPLIT — foto kiri, katalog kanan (acuan Tuku) ── */
-        .menu-split { display: grid; grid-template-columns: 1fr 1.15fr; gap: 3rem; align-items: start; }
-        .menu-split > * { min-width: 0; }
-        .menu-photo {
-            position: sticky; top: 90px;
-            aspect-ratio: 4 / 5;
-            border-radius: 20px; overflow: hidden;
-            background: var(--card); border: 1px solid var(--border);
-        }
-        .menu-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .menu-photo-label {
-            position: absolute; top: 1.25rem; left: 1.25rem;
-            padding: 0.45rem 1.1rem; border-radius: 100px;
-            background: rgba(245,245,247,0.92); color: #1d1d1f;
-            font-size: 1.35rem; line-height: 1.1;
-        }
-        .menu-photo .img-placeholder { border-radius: 0; border: none; }
-        @media (max-width: 900px) {
-            .menu-split { grid-template-columns: 1fr; gap: 2rem; }
-            .menu-photo { position: static; aspect-ratio: 16 / 10; }
-        }
-
-        /* ── GRID 2 KOLOM — collapse di mobile ── */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-        .grid-2 > *, .footer-grid > * { min-width: 0; }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; padding-bottom: 3.5rem; border-bottom: 1px solid var(--border); }
-        @media (max-width: 900px) {
-            .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
-            .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-        }
-
-        /* ── OUTLET CARD ── */
-        .outlet-card { position: relative; overflow: hidden; cursor: pointer; }
-        .outlet-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(17,17,16,0.96) 0%, rgba(17,17,16,0.5) 60%, transparent 100%);
-            padding: 1.75rem 1.5rem 1.5rem;
-            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-        }
-        .outlet-detail {
-            margin-top: 0.75rem;
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
-            opacity: 0;
-        }
-        .outlet-card:hover .outlet-detail { max-height: 200px; opacity: 1; }
-        .outlet-card:hover .outlet-overlay { transform: translateY(-0.5rem); }
-
-        /* ── GALLERY ── */
-        .gallery-track {
-            display: flex;
-            gap: 0.75rem;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-        .gallery-track::-webkit-scrollbar { display: none; }
-        .gallery-item {
-            flex: 0 0 auto;
-            scroll-snap-align: start;
-            width: 340px;
-            height: 440px;
-            border-radius: 16px;
-            overflow: hidden;
-            background: var(--card);
-            position: relative;
-        }
-
-        /* ── PARTNER BADGES ── */
-        .partner-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.4rem 0.9rem;
-            border-radius: 100px;
-            border: 1px solid var(--border);
-            font-family: var(--font-body);
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-decoration: none;
-            transition: all 0.2s;
-            color: var(--light);
-        }
-        .partner-badge:hover { border-color: var(--white); color: var(--white); }
-
-        /* ── PLACEHOLDER IMAGE ── */
-        .img-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            background: var(--card);
-            border: 1px dashed var(--border);
-            border-radius: inherit;
-            color: var(--mid);
-        }
-        .img-placeholder svg { opacity: 0.4; }
-        .img-placeholder span { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
 </head>
 <body x-data="{
     navScrolled: false,
+    mobileMenuOpen: false,
     init() {
         window.addEventListener('scroll', () => {
             this.navScrolled = window.scrollY > 40;
@@ -525,6 +35,20 @@
                 stage.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
             });
         }
+        // Tutup mobile menu saat resize ke desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 900 && this.mobileMenuOpen) {
+                this.closeMobileMenu();
+            }
+        });
+    },
+    toggleMobileMenu() {
+        this.mobileMenuOpen = !this.mobileMenuOpen;
+        document.body.classList.toggle('nav-open', this.mobileMenuOpen);
+    },
+    closeMobileMenu() {
+        this.mobileMenuOpen = false;
+        document.body.classList.remove('nav-open');
     },
     scrollTo(selector) {
         const el = document.querySelector(selector);
@@ -543,7 +67,7 @@
             <img src="{{ asset('images/logo.png') }}" alt="SSST Coffee" style="height: 38px; width: auto; display: block;">
         </a>
 
-        {{-- Links --}}
+        {{-- Links (desktop) --}}
         <ul class="nav-links">
             <li><a href="#hero">Home</a></li>
             <li><a href="#menu">Menu</a></li>
@@ -554,9 +78,49 @@
             <li><a href="#about">About</a></li>
         </ul>
 
-        {{-- Tagline pill --}}
+        {{-- Tagline pill (desktop only) --}}
         <span class="nav-tagline">#AlwaySSST</span>
 
+        {{-- Burger button (mobile only) --}}
+        <button
+            id="nav-burger"
+            class="nav-burger"
+            aria-label="Buka menu navigasi"
+            :aria-expanded="mobileMenuOpen"
+            :class="mobileMenuOpen ? 'open' : ''"
+            @click="toggleMobileMenu()"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+    </div>
+
+    {{-- Mobile Menu Drawer --}}
+    <div
+        id="nav-mobile-menu"
+        class="nav-mobile-menu"
+        role="dialog"
+        aria-label="Menu navigasi"
+        x-cloak
+        x-show="mobileMenuOpen"
+        x-transition:enter="menu-slide-enter-active"
+        x-transition:enter-start="menu-slide-enter-start"
+        x-transition:enter-end="menu-slide-enter-end"
+        x-transition:leave="menu-slide-leave-active"
+        x-transition:leave-start="menu-slide-leave-start"
+        x-transition:leave-end="menu-slide-leave-end"
+        @keydown.escape.window="closeMobileMenu()"
+    >
+        <a href="#hero"    @click="closeMobileMenu()">Home</a>
+        <a href="#menu"    @click="closeMobileMenu()">Menu</a>
+        <a href="#merch"   @click="closeMobileMenu()">Merch</a>
+        <a href="#gallery" @click="closeMobileMenu()">Galeri</a>
+        <a href="#cerita"  @click="closeMobileMenu()">Cerita</a>
+        <a href="#outlet"  @click="closeMobileMenu()">Lokasi</a>
+        <a href="#about"   @click="closeMobileMenu()">About</a>
+        <p class="nav-mobile-tagline">#AlwaySSST</p>
     </div>
 </nav>
 
@@ -838,7 +402,7 @@
                 {{-- Foto otomatis dari public/images/menu/{nama-item}.jpg/png/webp --}}
                 <img x-show="cur && cur.img && imgOk" :src="cur && cur.img" :alt="cur ? cur.name : 'SSST Coffee'"
                      style="width:100%; height:100%; object-fit:cover; display:block;"
-                     @@error="imgOk = false" @load="imgOk = true">
+                     x-on:error="imgOk = false" x-on:load="imgOk = true">
                 <div class="img-placeholder" x-show="!cur || !cur.img || !imgOk" style="height:100%;">
                     <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="15" r="2"/></svg>
                     <span x-text="cur ? 'Foto: ' + cur.name : 'Foto lini produk SSST'"></span>
@@ -1050,7 +614,7 @@
                 <div style="border-top: 1px solid var(--border); margin-bottom: 3rem;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0;">
                         @foreach([['Source','Starts from the right source'],['Strategy','Developed with a strategy'],['Service','Delivered with great service'],['Team','Crafted by our passionate team']] as $pillar)
-                        <div style="padding: 1.5rem 1.25rem 1.5rem 0; border-bottom: 1px solid var(--border); {{ $loop->index % 2 === 1 ? 'padding-left:1.25rem; border-left: 1px solid var(--border);' : '' }}">
+                        <div class="pillar-item">
                             <h4 class="f-heading c-white" style="font-size:1.3rem; margin-bottom:0.35rem;">{{ $pillar[0] }}</h4>
                             <p class="c-mid" style="font-size:0.78rem; line-height:1.5;">{{ $pillar[1] }}</p>
                         </div>
