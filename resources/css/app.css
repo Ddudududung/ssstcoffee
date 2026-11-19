@@ -6,3 +6,72 @@
   html { scroll-behavior: smooth; }
   body { background-color: #111110; color: #f4f4f0; }
 }
+
+/* DOODEL LATAR */
+.doodle-host { position: relative; }
+.doodle-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.doodle-deco { position: absolute; user-select: none; -webkit-user-drag: none; }
+.doodle-host > .section-wrap { position: relative; z-index: 1; }
+@media (max-width: 900px) {
+    .doodle-deco { max-width: 56px; height: auto; }
+}
+
+/* GALERI → IG + KARTU EVENT WA */
+a.gallery-item { cursor: pointer; transition: transform 0.25s ease; }
+a.gallery-item:hover { transform: translateY(-4px); }
+.gallery-event-cta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.9rem;
+    padding: 2rem 1.75rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    border-radius: 16px;
+}
+.gallery-event-cta:hover { border-color: var(--mid); }
+.event-wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    align-self: flex-start;
+    padding: 0.65rem 1.25rem;
+    border-radius: 100px;
+    background: #1d1d1f;
+    color: #f5f5f7;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    transition: background 0.2s;
+}
+.gallery-event-cta:hover .event-wa-btn { background: #000; }
+
+/* MERCH SLIDER — desktop grid, mobile slide + dots */
+.merch-track { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+.merch-dots { display: none; }
+@media (max-width: 700px) {
+    .merch-track {
+        display: flex;
+        gap: 0.75rem;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.5rem;
+    }
+    .merch-track::-webkit-scrollbar { display: none; }
+    .merch-track > * { flex: 0 0 72%; scroll-snap-align: center; }
+    .merch-dots { display: flex; justify-content: center; gap: 0.45rem; margin-top: 1.25rem; }
+    .merch-dots button {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        border: none;
+        padding: 0;
+        background: var(--border);
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .merch-dots button.active { background: var(--white); transform: scale(1.3); }
+}

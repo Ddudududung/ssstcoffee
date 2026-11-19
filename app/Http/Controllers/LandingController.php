@@ -47,7 +47,38 @@ class LandingController extends Controller
             });
         })->values();
 
-        return view('landing', compact('hotspots', 'categories', 'products', 'outlets', 'allItems'));
+        // Doodle dekorasi latar: auto-detect public/images/doodle/*.{png,webp,jpg,jpeg}
+        // Juga cek jika ada file doddle.png langsung di public/images/
+        $doodleFiles = [];
+        foreach (['png', 'webp', 'jpg', 'jpeg'] as $ext) {
+            foreach (glob(public_path("images/doodle/*.{$ext}")) ?: [] as $f) {
+                $doodleFiles[] = $f;
+            }
+        }
+        if (empty($doodleFiles) && file_exists(public_path('images/doddle.png'))) {
+            $doodleFiles[] = public_path('images/doddle.png');
+        }
+        $doodles = collect($doodleFiles)->sort()->values()->slice(0, 6)
+            ->map(function ($p) {
+                if (str_contains($p, 'doodle')) {
+                    return asset('images/doodle/' . basename($p));
+                }
+                return asset('images/' . basename($p));
+            })->all();
+
+        // Foto galeri/event: auto-detect public/images/gallery/{1..8}.{jpg,jpeg,png,webp}
+        $galleryPhotos = collect(range(1, 8))->map(function ($n) {
+            $img = null;
+            foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
+                if (file_exists(public_path("images/gallery/{$n}.{$ext}"))) {
+                    $img = asset("images/gallery/{$n}.{$ext}");
+                    break;
+                }
+            }
+            return ['n' => $n, 'img' => $img];
+        })->values()->all();
+
+        return view('landing', compact('hotspots', 'categories', 'products', 'outlets', 'allItems', 'galleryPhotos', 'doodles'));
     }
 }
 

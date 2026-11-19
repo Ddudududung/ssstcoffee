@@ -16,497 +16,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <style>
-        /*
-        ┌──────────────────────────────────────────────────────────────┐
-        │  SSST CUSTOM FONTS — file asli di subfolder public/fonts/,   │
-        │  salinan datar dengan nama bersih dipakai di bawah ini:      │
-        │                                                              │
-        │  Baligo (display):  Baligo-Light/Regular/Bold.otf            │
-        │  Kopi Susu (akses): KopiSusu.otf                             │
-        │  Creato Display:    CreatoDisplay-Regular/Medium/Bold/       │
-        │                     ExtraBold.otf                            │
-        └──────────────────────────────────────────────────────────────┘
-        */
-
-        /* SSST Display — Baligo (headline & wordmark) */
-        @font-face {
-            font-family: 'SSSTeam Baligo';
-            src: url('/fonts/Baligo-Light.otf') format('opentype');
-            font-weight: 300;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'SSSTeam Baligo';
-            src: url('/fonts/Baligo-Regular.otf') format('opentype');
-            font-weight: 400;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'SSSTeam Baligo';
-            src: url('/fonts/Baligo-Bold.otf') format('opentype');
-            font-weight: 700 800;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* SSST Display — Kopi Susu (aksen doodle & handwritten) */
-        @font-face {
-            font-family: 'SSST Kopi Susu';
-            src: url('/fonts/KopiSusu.otf') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* SSST Sans-Serif — Creato Display */
-        @font-face {
-            font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-Regular.otf') format('opentype');
-            font-weight: 400;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-Medium.otf') format('opentype');
-            font-weight: 500;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-Bold.otf') format('opentype');
-            font-weight: 700;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Creato Display';
-            src: url('/fonts/CreatoDisplay-ExtraBold.otf') format('opentype');
-            font-weight: 800;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* ── Base ── */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            /* Baligo hanya untuk logo & kata kunci (brand book) */
-            --font-display:  'SSSTeam Baligo', 'Plus Jakarta Sans', system-ui, sans-serif;
-            --font-accent:   'SSST Kopi Susu', 'Caveat', 'Kalam', cursive;
-            /* Judul & isi = Creato Display (brand book: ExtraBold/Bold utk judul) */
-            --font-heading:  'Creato Display', 'Plus Jakarta Sans', system-ui, sans-serif;
-            --font-body:     'Creato Display', 'Plus Jakarta Sans', system-ui, sans-serif;
-
-            --black:   #111110;
-            --dark:    #1a1a18;
-            --card:    #212120;
-            --border:  #2e2e2c;
-            --mid:     #737370;
-            --light:   #c8c8c4;
-            --white:   #f4f4f0;
-            --cream:   #f0ece4;
-
-            --accent:  #e8e0d2; /* warm off-white accent */
-        }
-
-        html { scroll-behavior: smooth; }
-        section[id], footer[id] { scroll-margin-top: 84px; }
-
-        body {
-            font-family: var(--font-body);
-            background-color: var(--black);
-            color: var(--white);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Utility font classes */
-        .f-display  { font-family: var(--font-display); }  /* Baligo — logo & kata kunci saja */
-        .f-accent   { font-family: var(--font-accent); }   /* Kopi Susu — aksen tulisan tangan */
-        .f-heading  { font-family: var(--font-heading); font-weight: 800; }
-        .f-body     { font-family: var(--font-body); }
-
-        /* Type scale — judul selalu Creato Display (brand book) */
-        .t-hero     { font-family: var(--font-heading); font-weight: 800; font-size: clamp(3.5rem, 8vw, 8rem); line-height: 0.95; letter-spacing: -0.03em; }
-        .t-h1       { font-family: var(--font-heading); font-weight: 800; font-size: clamp(2.5rem, 5vw, 5rem);  line-height: 1.0;  letter-spacing: -0.02em; }
-        .t-h2       { font-family: var(--font-heading); font-weight: 800; font-size: clamp(1.75rem, 3vw, 3rem); line-height: 1.1;  letter-spacing: -0.02em; }
-        .t-h3       { font-family: var(--font-heading); font-weight: 700; font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1.2; }
-        .t-body     { font-size: clamp(0.9rem, 1.1vw, 1.05rem); line-height: 1.7; }
-        .t-small    { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
-        .t-label    { font-size: 0.7rem;  letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; }
-
-        /* Colors */
-        .c-white    { color: var(--white); }
-        .c-light    { color: var(--light); }
-        .c-mid      { color: var(--mid); }
-        .c-black    { color: var(--black); }
-        .c-cream    { color: var(--cream); }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--black); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-        /* no-scrollbar utility */
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* Thin divider */
-        .hr-thin { border: none; border-top: 1px solid var(--border); }
-
-        /* Backdrop blur helper */
-        .glass { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); }
-
-        /* ── NAV ── */
-        #site-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-        #site-nav.scrolled {
-            background: rgba(17,17,16,0.88);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-inner {
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            height: 68px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-        }
-        .nav-logo {
-            font-family: var(--font-display);
-            font-size: 1.65rem;
-            letter-spacing: -0.02em;
-            color: var(--white);
-            text-decoration: none;
-            line-height: 1;
-        }
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            list-style: none;
-        }
-        .nav-links a {
-            font-family: var(--font-body);
-            font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--light);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--white); }
-
-        /* ── NAV RESPONSIVE (360px+, brand book) ── */
-        .nav-tagline { color: var(--mid); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-body); }
-        @media (max-width: 900px) {
-            .nav-inner { gap: 1rem; padding: 0 1rem; height: 60px; }
-            .nav-links { gap: 1.1rem; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
-            .nav-links::-webkit-scrollbar { display: none; }
-            .nav-links a { font-size: 0.7rem; letter-spacing: 0.08em; white-space: nowrap; }
-            .nav-tagline { display: none; }
-            #hero { padding-top: 60px; }
-        }
-
-        /* ── SECTION WRAPPER ── */
-        .section-wrap {
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        /* ── HOTSPOT ── */
-        @keyframes ping {
-            0%   { transform: scale(1); opacity: 1; }
-            75%  { transform: scale(2.2); opacity: 0; }
-            100% { transform: scale(2.2); opacity: 0; }
-        }
-        .hotspot-btn { position: absolute; transform: translate(-50%, -50%); cursor: pointer; z-index: 20; }
-        .hotspot-ring {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: rgba(244,244,240,0.25);
-            animation: ping 2.2s cubic-bezier(0,0,0.2,1) infinite;
-        }
-        .hotspot-dot {
-            position: relative;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--white);
-            border: 2px solid var(--black);
-            transition: transform 0.2s;
-        }
-        .hotspot-btn:hover .hotspot-dot,
-        .hotspot-btn.active .hotspot-dot { transform: scale(1.35); background: var(--cream); }
-
-        /* ── INTERACTIVE ILLUSTRATION — glow ala tuku.coffee, palet hitam/abu/putih ── */
-        .illo {
-            cursor: pointer;
-            transition: filter 0.35s ease, opacity 0.35s ease;
-        }
-        .illo:hover, .illo:focus-visible {
-            filter: drop-shadow(0 0 6px rgba(244,244,240,0.55))
-                    drop-shadow(0 0 24px rgba(244,244,240,0.22));
-        }
-        /* Saat satu bagian di-hover, bagian lain meredup → fokus */
-        #illo-stage svg:has(.illo:hover) .illo:not(:hover) { opacity: 0.35; }
-
-        /* Chip label — muncul di atas bagian yang di-hover (ala Tuku) */
-        .illo-label {
-            opacity: 0;
-            transform: translateY(6px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            pointer-events: none;
-        }
-        .illo:hover .illo-label,
-        .illo:focus-visible .illo-label { opacity: 1; transform: translateY(0); }
-
-        /* Cursor spotlight — cahaya lembut mengikuti kursor */
-        .spotlight {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 10;
-            background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 45%),
-                        rgba(244,244,240,0.07), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        #illo-stage:hover .spotlight { opacity: 1; }
-
-        /* Animasi ambient */
-        @keyframes steam-rise {
-            0%   { transform: translateY(0);    opacity: 0; }
-            30%  { opacity: 1; }
-            100% { transform: translateY(-12px); opacity: 0; }
-        }
-        .steam path {
-            animation: steam-rise 2.8s ease-in-out infinite;
-            transform-box: fill-box;
-        }
-        .steam path:nth-child(2) { animation-delay: 0.45s; }
-        .steam path:nth-child(3) { animation-delay: 0.9s; }
-
-        @keyframes wind-dash { to { stroke-dashoffset: -24; } }
-        .wind line {
-            stroke-dasharray: 12 8;
-            animation: wind-dash 1.1s linear infinite;
-        }
-        .wind line:nth-child(2) { animation-delay: 0.2s; }
-        .wind line:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes floaty {
-            0%, 100% { transform: translateY(0); }
-            50%      { transform: translateY(-6px); }
-        }
-        .beans {
-            animation: floaty 4s ease-in-out infinite;
-            transform-box: fill-box;
-        }
-
-        /* Polaroid & hanger bergoyang lembut */
-        @keyframes swing {
-            0%, 100% { transform: rotate(-2deg); }
-            50%      { transform: rotate(2.5deg); }
-        }
-        .swing { animation: swing 5s ease-in-out infinite; transform-box: fill-box; transform-origin: top center; }
-        .swing.d2 { animation-delay: 0.8s; }
-        .swing.d3 { animation-delay: 1.6s; }
-
-        /* Elemen melayang naik-turun (pin, bubble) */
-        @keyframes bob {
-            0%, 100% { transform: translateY(0); }
-            50%      { transform: translateY(-5px); }
-        }
-        .bob { animation: bob 3.2s ease-in-out infinite; transform-box: fill-box; }
-        .bob.d2 { animation-delay: 0.7s; }
-
-        /* Heart like berdenyut */
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50%      { transform: scale(1.25); opacity: 1; }
-        }
-        .heart { animation: heartbeat 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-        .heart.d2 { animation-delay: 0.6s; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .steam path, .wind line, .beans, .swing, .bob, .heart { animation: none !important; }
-        }
-
-        /* ── MENU TAB ── */
-        .tab-btn {
-            font-family: var(--font-body);
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            padding: 0.55rem 1.25rem;
-            border-radius: 100px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--mid);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-        .tab-btn:hover { color: var(--white); border-color: var(--mid); }
-        .tab-btn.active { background: var(--white); color: var(--black); border-color: var(--white); }
-
-        /* ── MENU ITEM BUTTON — klik → foto & keterangan di panel kiri ── */
-        .menu-item-btn {
-            display: block;
-            width: 100%;
-            text-align: left;
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: 14px;
-            padding: 0.9rem 1.1rem;
-            cursor: pointer;
-            font-family: var(--font-body);
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .menu-item-btn:hover { background: rgba(29,29,31,0.05); }
-        .menu-item-btn.active { background: var(--card); border-color: var(--border); }
-        .mi-name { display: block; font-weight: 700; font-size: 0.95rem; color: var(--white); }
-        .mi-desc { display: block; font-size: 0.78rem; color: var(--mid); margin-top: 0.25rem; line-height: 1.5; }
-
-        /* ── SECTION THEMES — ritme gelap/terang/abu (palet netral SSST) ──
-           Semua warna inline pakai var(), jadi cukup remap variabel di sini
-           dan seluruh isi section otomatis jadi versi terang. */
-        .theme-light {
-            --black:  #f5f5f7;  /* latar terang: Putih SSST */
-            --dark:   #ececee;  /* latar abu muda */
-            --card:   #ffffff;
-            --border: #c9c9ce;
-            --mid:    #737375;  /* Abu sedang */
-            --light:  #48484a;  /* Abu gelap */
-            --white:  #1d1d1f;  /* teks utama jadi tinta: Hitam SSST */
-            --cream:  #1d1d1f;
-        }
-
-        /* ── MENU SPLIT — foto kiri, katalog kanan (acuan Tuku) ── */
-        .menu-split { display: grid; grid-template-columns: 1fr 1.15fr; gap: 3rem; align-items: start; }
-        .menu-split > * { min-width: 0; }
-        .menu-photo {
-            position: sticky; top: 90px;
-            aspect-ratio: 4 / 5;
-            border-radius: 20px; overflow: hidden;
-            background: var(--card); border: 1px solid var(--border);
-        }
-        .menu-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .menu-photo-label {
-            position: absolute; top: 1.25rem; left: 1.25rem;
-            padding: 0.45rem 1.1rem; border-radius: 100px;
-            background: rgba(245,245,247,0.92); color: #1d1d1f;
-            font-size: 1.35rem; line-height: 1.1;
-        }
-        .menu-photo .img-placeholder { border-radius: 0; border: none; }
-        @media (max-width: 900px) {
-            .menu-split { grid-template-columns: 1fr; gap: 2rem; }
-            .menu-photo { position: static; aspect-ratio: 16 / 10; }
-        }
-
-        /* ── GRID 2 KOLOM — collapse di mobile ── */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-        .grid-2 > *, .footer-grid > * { min-width: 0; }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; padding-bottom: 3.5rem; border-bottom: 1px solid var(--border); }
-        @media (max-width: 900px) {
-            .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
-            .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-        }
-
-        /* ── OUTLET CARD ── */
-        .outlet-card { position: relative; overflow: hidden; cursor: pointer; }
-        .outlet-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(17,17,16,0.96) 0%, rgba(17,17,16,0.5) 60%, transparent 100%);
-            padding: 1.75rem 1.5rem 1.5rem;
-            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-        }
-        .outlet-detail {
-            margin-top: 0.75rem;
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
-            opacity: 0;
-        }
-        .outlet-card:hover .outlet-detail { max-height: 200px; opacity: 1; }
-        .outlet-card:hover .outlet-overlay { transform: translateY(-0.5rem); }
-
-        /* ── GALLERY ── */
-        .gallery-track {
-            display: flex;
-            gap: 0.75rem;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-        .gallery-track::-webkit-scrollbar { display: none; }
-        .gallery-item {
-            flex: 0 0 auto;
-            scroll-snap-align: start;
-            width: 340px;
-            height: 440px;
-            border-radius: 16px;
-            overflow: hidden;
-            background: var(--card);
-            position: relative;
-        }
-
-        /* ── PARTNER BADGES ── */
-        .partner-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.4rem 0.9rem;
-            border-radius: 100px;
-            border: 1px solid var(--border);
-            font-family: var(--font-body);
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-decoration: none;
-            transition: all 0.2s;
-            color: var(--light);
-        }
-        .partner-badge:hover { border-color: var(--white); color: var(--white); }
-
-        /* ── PLACEHOLDER IMAGE ── */
-        .img-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            background: var(--card);
-            border: 1px dashed var(--border);
-            border-radius: inherit;
-            color: var(--mid);
-        }
-        .img-placeholder svg { opacity: 0.4; }
-        .img-placeholder span { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/landing.css') }}?v={{ filemtime(public_path('css/landing.css')) }}">
 </head>
 <body x-data="{
     navScrolled: false,
@@ -540,7 +50,7 @@
 
         {{-- Logo — ganti file di public/images/logo.png --}}
         <a href="#" class="nav-logo" aria-label="SSST Coffee — ke atas">
-            <img src="{{ asset('images/logo.png') }}" alt="SSST Coffee" style="height: 38px; width: auto; display: block;">
+            <img src="{{ asset('images/logo.png') }}?v={{ filemtime(public_path('images/logo.png')) }}" alt="SSST Coffee" style="height: 38px; width: auto; display: block;">
         </a>
 
         {{-- Links --}}
@@ -564,26 +74,29 @@
 {{-- ═══════════════════════════════════════════════
      01 · HERO — INTERACTIVE HOTSPOT ILLUSTRATION
 ═══════════════════════════════════════════════ --}}
-<section id="hero" style="padding-top: 68px; background: var(--black); border-bottom: 1px solid var(--border);">
-    <div class="section-wrap" style="padding-top: 4rem; padding-bottom: 4rem;">
+<section id="hero" class="doodle-bg" style="padding-top: 68px; background: var(--black); border-bottom: 1px solid var(--border); {{ !empty($doodles) ? '--doodle-url: url(' . $doodles[0] . ');' : '' }}">
+    <div class="section-wrap" style="padding-top: 3.5rem; padding-bottom: 3.5rem;">
 
-        {{-- Eyebrow --}}
-        <p class="t-label c-mid" style="margin-bottom: 1.25rem;">Coffee Companion / Lifestyle Compliment</p>
+        {{-- ── BARIS ATAS: Judul di Kiri, Deskripsi di Samping Kanan ── --}}
+        <div class="hero-top-split">
+            <div class="hero-left">
+                <p class="t-label c-mid" style="margin-bottom: 1rem;">Coffee Companion / Lifestyle Compliment</p>
+                <h1 class="t-hero c-white" style="margin-bottom: 0;">
+                    Start<br>with <span class="f-display">SSST.</span>
+                </h1>
+            </div>
 
-        {{-- Hero headline — judul Creato, "SSST." sebagai kata kunci pakai Baligo (brand book) --}}
-        <h1 class="t-hero c-white" style="margin-bottom: 1.5rem; max-width: 14ch;">
-            Start<br>with <span class="f-display">SSST.</span>
-        </h1>
+            <div class="hero-right">
+                <p class="t-body c-light" style="margin-bottom: 1.5rem; font-size: 1.05rem; line-height: 1.8;">
+                    Titik singgah buat ngopi. Setelah makan, setelah lari, atau sebelum pulang.<br>
+                    <span class="c-mid" style="font-size: 0.9rem;">Gambar di bawah ini adalah peta interaktif — arahkan kursor &amp; klik untuk jelajah:</span>
+                </p>
 
-        <p class="t-body c-light" style="max-width: 52ch; margin-bottom: 3rem;">
-            Titik singgah buat ngopi. Setelah makan, setelah lari, atau sebelum pulang.<br>
-            Gambar di bawah ini adalah isi web-nya — arahkan kursor, bagian yang menyala bisa diklik:
-            <span class="c-white" style="font-weight:600;">Menu · Merch · Galeri · Cerita · Lokasi · About</span>
-        </p>
+            </div>
+        </div>
 
-        {{-- ── ILLUSTRATION STAGE — full-bleed, tiap zona = satu section web ── --}}
-        <div style="margin-bottom: 3rem; margin-left: calc(-1 * min(1.5rem, max(0px, (100vw - 1320px) / -2))); margin-right: calc(-1 * min(1.5rem, max(0px, (100vw - 1320px) / -2)));">
-            {{-- Scrollable on mobile --}}
+        {{-- ── BARIS BAWAH: Ilustrasi Panggung Animasi Full Lebar ── --}}
+        <div style="margin-bottom: 1rem; margin-left: calc(-1 * min(1.5rem, max(0px, (100vw - 1320px) / -2))); margin-right: calc(-1 * min(1.5rem, max(0px, (100vw - 1320px) / -2)));">
             <div style="overflow-x: auto;" class="no-scrollbar">
                 <div id="illo-stage" style="position: relative; min-width: 1100px; aspect-ratio: 1400 / 480;">
 
@@ -605,7 +118,7 @@
                             <line x1="180" y1="124" x2="180" y2="140" stroke="#2e2e2c" stroke-width="2" stroke-dasharray="4 4"/>
                             {{-- Signboard --}}
                             <rect x="95" y="140" width="170" height="34" rx="5" fill="#1a1a18" stroke="#f4f4f0" stroke-width="2"/>
-                            <text x="180" y="163" fill="#f4f4f0" font-family="'Creato Display',sans-serif" font-weight="800" font-size="15" text-anchor="middle" letter-spacing="1">ssst coffee</text>
+                            <text x="180" y="163" fill="#f4f4f0" font-family="'Creato Display',sans-serif" font-weight="800" font-size="17" text-anchor="middle" letter-spacing="1">ssst</text>
                             {{-- Awning --}}
                             <polygon points="60,208 300,208 282,174 78,174" fill="#212120" stroke="#f4f4f0" stroke-width="2.5"/>
                             <line x1="108" y1="174" x2="94" y2="208" stroke="#f4f4f0" stroke-width="1.5"/>
@@ -922,43 +435,81 @@
             <p class="t-body c-light" style="max-width: 40ch;">Hanya tersedia melalui official store Tokopedia. Tidak ada transaksi di sini.</p>
         </div>
 
-        {{-- Merch Grid --}}
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
-            @foreach($products as $prod)
-            <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: border-color 0.2s, transform 0.2s;" onmouseover="this.style.borderColor='var(--mid)'; this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)'">
+        {{-- Merch Slider (Desktop Grid, Mobile Slide + Dots) --}}
+        <div x-data="{
+            idx: 0,
+            count: {{ $products->count() }},
+            go(i) {
+                const t = this.$refs.track;
+                if (!t || !t.children.length) return;
+                const c = t.children[Math.max(0, Math.min(i, t.children.length - 1))];
+                t.scrollTo({ left: c.offsetLeft - t.children[0].offsetLeft, behavior: 'smooth' });
+                this.idx = i;
+            },
+            onScroll() {
+                const t = this.$refs.track;
+                if (!t || !t.children.length) return;
+                const base = t.children[0].offsetLeft;
+                let best = 0, dist = Infinity;
+                [...t.children].forEach((c, i) => {
+                    const d = Math.abs(c.offsetLeft - base - t.scrollLeft);
+                    if (d < dist) { dist = d; best = i; }
+                });
+                this.idx = best;
+            }
+        }">
+            <div class="merch-track" x-ref="track" @scroll.debounce.80ms="onScroll()">
+                @foreach($products as $prod)
+                <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: border-color 0.2s, transform 0.2s;" onmouseover="this.style.borderColor='var(--mid)'; this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)'">
 
-                {{-- Product image --}}
-                <div style="aspect-ratio: 1; background: var(--black); padding: 1.25rem; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border);">
-                    @if($prod->image_url && !str_starts_with($prod->image_url, '/images/merch'))
-                        <img src="{{ asset($prod->image_url) }}" alt="{{ $prod->name }}" style="width:100%; height:100%; object-fit:contain;">
-                    @else
-                        {{--
-                            TODO: Ganti dengan:
-                            <img src="/images/merch/{{ Str::slug($prod->name) }}.jpg" alt="{{ $prod->name }}"
-                                 style="width:100%; height:100%; object-fit:contain;">
-                        --}}
-                        <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem;">
-                            <svg width="32" height="32" fill="none" stroke="var(--border)" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="15" r="2"/></svg>
-                            <span class="t-label" style="color:var(--border);">Foto menyusul</span>
-                        </div>
-                    @endif
-                </div>
-
-                {{-- Info --}}
-                <div style="padding: 1.1rem 1.25rem 1.25rem;">
-                    <p class="c-white" style="font-weight:700; font-size:0.88rem; margin-bottom:0.25rem;">{{ $prod->name }}</p>
-                    <p class="c-mid" style="font-size:0.72rem; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ $prod->description }}</p>
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:1rem; padding-top:0.75rem; border-top: 1px solid var(--border);">
-                        <span class="c-white" style="font-weight:800; font-size:0.9rem;">{{ $prod->formatted_price }}</span>
-                        {{-- TODO: ganti href dengan URL Tokopedia produk ini --}}
-                        <a href="{{ $prod->tokopedia_url ?: '#' }}" target="_blank" rel="noopener" style="font-size:0.7rem; font-weight:700; letter-spacing:0.08em; color:#03ac0e; text-decoration:none; text-transform:uppercase; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
-                            Tokopedia ↗
-                        </a>
+                    {{-- Product image --}}
+                    <div style="aspect-ratio: 1; background: var(--black); padding: 1.25rem; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border);">
+                        @if($prod->image_url && !str_starts_with($prod->image_url, '/images/merch'))
+                            <img src="{{ asset($prod->image_url) }}" alt="{{ $prod->name }}" style="width:100%; height:100%; object-fit:contain;">
+                        @else
+                            {{-- Cek file gambar lokal di public/images/merch/{slug}.jpg / png --}}
+                            @php
+                                $merchSlug = Str::slug($prod->name);
+                                $localMerchImg = null;
+                                foreach(['jpg', 'jpeg', 'png', 'webp'] as $mExt) {
+                                    if(file_exists(public_path("images/merch/{$merchSlug}.{$mExt}"))) {
+                                        $localMerchImg = asset("images/merch/{$merchSlug}.{$mExt}");
+                                        break;
+                                    }
+                                }
+                            @endphp
+                            @if($localMerchImg)
+                                <img src="{{ $localMerchImg }}" alt="{{ $prod->name }}" style="width:100%; height:100%; object-fit:contain;">
+                            @else
+                                <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem;">
+                                    <svg width="32" height="32" fill="none" stroke="var(--border)" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="15" r="2"/></svg>
+                                    <span class="t-label" style="color:var(--border);">Foto menyusul</span>
+                                </div>
+                            @endif
+                        @endif
                     </div>
-                </div>
 
+                    {{-- Info --}}
+                    <div style="padding: 1.1rem 1.25rem 1.25rem;">
+                        <p class="c-white" style="font-weight:700; font-size:0.88rem; margin-bottom:0.25rem;">{{ $prod->name }}</p>
+                        <p class="c-mid" style="font-size:0.72rem; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ $prod->description }}</p>
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:1rem; padding-top:0.75rem; border-top: 1px solid var(--border);">
+                            <span class="c-white" style="font-weight:800; font-size:0.9rem;">{{ $prod->formatted_price }}</span>
+                            <a href="{{ $prod->tokopedia_url ?: '#' }}" target="_blank" rel="noopener" style="font-size:0.7rem; font-weight:700; letter-spacing:0.08em; color:#03ac0e; text-decoration:none; text-transform:uppercase; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                                Tokopedia ↗
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                @endforeach
             </div>
-            @endforeach
+
+            <div class="merch-dots" role="tablist" aria-label="Navigasi produk merch">
+                <template x-for="i in count" :key="i">
+                    <button type="button" role="tab" :aria-label="'Produk ' + i" :class="idx === i - 1 ? 'active' : ''" @click="go(i - 1)"></button>
+                </template>
+            </div>
         </div>
 
         {{-- Sync badge --}}
@@ -984,33 +535,41 @@
         </div>
 
         {{-- Horizontal scroll gallery --}}
+        @php
+            $igUrl = 'https://instagram.com/ssstcoffee';
+            $waEvent = 'https://wa.me/6287156178190?text=' . rawurlencode('Halo SSST! Saya mau tanya soal event / kolaborasi di kedai. Bisa dibantu?');
+        @endphp
         <div class="gallery-track" style="padding: 0 1.5rem 1.5rem;">
-
-            {{-- TODO: Ganti setiap div.gallery-item dengan foto nyata --}}
-            {{-- FORMAT:
-                <div class="gallery-item">
-                    <img src="/images/gallery/nama-file.jpg" alt="Deskripsi"
-                         style="width:100%; height:100%; object-fit:cover;">
-                    <div style="position:absolute; bottom:0; left:0; right:0; padding:1.25rem; background:linear-gradient(transparent, rgba(17,17,16,0.9));">
-                        <p class="t-label c-mid">Label Event</p>
-                        <p class="c-white" style="font-weight:600; font-size:0.9rem;">Keterangan foto</p>
+            @foreach($galleryPhotos as $ph)
+            <a class="gallery-item" href="{{ $igUrl }}" target="_blank" rel="noopener" title="Lihat di Instagram @ssstcoffee" style="display:block; text-decoration:none; position:relative;">
+                @if($ph['img'])
+                    <img src="{{ $ph['img'] }}" alt="Momen di SSST Coffee — foto {{ $ph['n'] }}" style="width:100%; height:100%; object-fit:cover; display:block; border-radius:16px;">
+                @else
+                    <div class="img-placeholder" style="border-radius:16px;">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="15" r="2"/></svg>
+                        <span>Taruh: public/images/gallery/{{ $ph['n'] }}.jpg</span>
                     </div>
-                </div>
-            --}}
-
-            @for($g = 1; $g <= 8; $g++)
-            <div class="gallery-item">
-                <div class="img-placeholder" style="border-radius:16px;">
-                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="15" r="2"/></svg>
-                    <span>Foto {{ $g }}</span>
-                </div>
+                @endif
                 <div style="position:absolute; bottom:0; left:0; right:0; padding:1.25rem; background:linear-gradient(transparent, rgba(17,17,16,0.88)); border-bottom-left-radius:16px; border-bottom-right-radius:16px;">
-                    <p class="t-label" style="color:var(--mid); margin-bottom:0.25rem;">Event / Keseharian</p>
-                    <p class="c-light" style="font-weight:600; font-size:0.88rem;">Isi keterangan foto di sini</p>
+                    <p class="t-label" style="color:rgba(245,245,247,0.75); margin-bottom:0.25rem;">{{ $ph['n'] <= 4 ? 'Event SSST' : 'Keseharian' }}</p>
+                    <p class="c-white" style="font-weight:600; font-size:0.85rem;">Buka Instagram ↗</p>
                 </div>
-            </div>
-            @endfor
+            </a>
+            @endforeach
 
+            {{-- Kartu CTA Event → langsung chat WhatsApp --}}
+            <a class="gallery-item gallery-event-cta" href="{{ $waEvent }}" target="_blank" rel="noopener" title="Chat WhatsApp untuk event & kolaborasi">
+                <span class="t-label" style="color:var(--mid);">Event &amp; Kolaborasi</span>
+                <span class="f-display" style="font-size:2rem; line-height:1.15; color:var(--white);">Mau bikin<br>event bareng<br>SSST?</span>
+                <span class="event-wa-btn">Chat WhatsApp ↗</span>
+                <span class="c-mid" style="font-size:0.75rem;">Balasan langsung dari admin, bukan bot.</span>
+            </a>
+        </div>
+
+        {{-- CTA bawah — connect langsung ke Instagram --}}
+        <div style="padding: 0 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+            <p class="t-body c-mid" style="margin:0;">Semua momen terbaru langsung di Instagram — klik foto di atas buat buka.</p>
+            <a href="{{ $igUrl }}" target="_blank" rel="noopener" class="partner-badge">@ssstcoffee ↗</a>
         </div>
 
     </div>
@@ -1020,7 +579,7 @@
 {{-- ═══════════════════════════════════════════════
      05 · CERITA SSST COFFEE
 ═══════════════════════════════════════════════ --}}
-<section id="cerita" class="theme-light" style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border);">
+<section id="cerita" class="doodle-bg" style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border); {{ !empty($doodles) ? '--doodle-url: url(' . $doodles[0] . ');' : '' }}">
     <div class="section-wrap">
 
         <div class="grid-2">
@@ -1083,7 +642,7 @@
 {{-- ═══════════════════════════════════════════════
      06 · OUTLET / LOKASI
 ═══════════════════════════════════════════════ --}}
-<section id="outlet" style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border);">
+<section id="outlet" class="doodle-bg" style="padding: 6rem 0; background: var(--black); border-bottom: 1px solid var(--border); {{ !empty($doodles) ? '--doodle-url: url(' . $doodles[0] . ');' : '' }}">
     <div class="section-wrap">
 
         {{-- Header --}}
@@ -1118,10 +677,9 @@
                              alt="{{ $outlet->name }}"
                              style="width:100%; height:100%; object-fit:cover;">
                     --}}
-                    <div class="img-placeholder" style="height:100%; border-radius:20px;">
-                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="15" r="2"/></svg>
-                        <span>Foto Ambience {{ $outlet->name }}</span>
-                    </div>
+                    <img src="/images/outlets/{{ Str::slug($outlet->name) }}.jpg"
+     alt="{{ $outlet->name }}"
+     style="width:100%; height:100%; object-fit:cover;">
                 </div>
 
                 {{-- Overlay gradient + info --}}
@@ -1187,7 +745,7 @@
             {{-- Brand --}}
             <div>
                 <a href="#" class="nav-logo" style="display:block; margin-bottom:1rem;" aria-label="SSST Coffee">
-                    <img src="{{ asset('images/logo.png') }}" alt="SSST Coffee" style="height: 48px; width: auto; display: block;">
+                    <img src="{{ asset('images/logo.png') }}?v={{ filemtime(public_path('images/logo.png')) }}" alt="SSST Coffee" style="height: 48px; width: auto; display: block;">
                 </a>
                 <p class="t-body c-mid" style="max-width:38ch; margin-bottom:1.75rem;">
                     Coffee Companion / Lifestyle Compliment.<br>
